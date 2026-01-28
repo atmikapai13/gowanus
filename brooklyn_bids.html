@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_29f97117fe7e75d51837f7bfe7ce10e0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="position: fixed; top: 10px; left: 50px; z-index: 1000; 
+     background-color: white; padding: 12px; border-radius: 5px; 
+     box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-family: Arial; max-width: 620px; max-height: 90vh; overflow-y: auto;">
+    <h3 style="margin: 0 0 10px 0;">Brooklyn BIDs (Ex. Proposed Gowanus BID)</h3>
+    <p style="margin: 0 0 8px 0; font-size: 9px; color: #666;"><b>BIDs Near Gowanus:</b></p>
+    <table style="border-collapse: collapse; font-size: 10px; width: 100%; table-layout: fixed;">
+        <colgroup>
+            <col style="width: 6%;">
+            <col style="width: 29%;">
+            <col style="width: 7%;">
+            <col style="width: 15%;">
+            <col style="width: 14%;">
+            <col style="width: 14%;">
+            <col style="width: 15%;">
+        </colgroup>
+        <tr style="border-bottom: 2px solid #333; background-color: #f5f5f5;">
+            <th style="text-align: center; padding: 5px 3px;">#</th>
+            <th style="text-align: left; padding: 5px 3px;">BID Name</th>
+            <th style="text-align: center; padding: 5px 3px;">Year</th>
+            <th style="text-align: right; padding: 5px 3px;">Properties ▼</th>
+            <th style="text-align: right; padding: 5px 3px;">Assessment</th>
+            <th style="text-align: right; padding: 5px 3px;">Budget</th>
+            <th style="text-align: right; padding: 5px 3px;">Avg/Prop*</th>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #f16913; font-size: 14px;">■</span> 1</td>
+            <td style="padding: 4px 3px;">DUMBO</td>
+            <td style="text-align: center; padding: 4px 3px;">2005</td>
+            <td style="text-align: right; padding: 4px 3px;">234</td>
+            <td style="text-align: right; padding: 4px 3px; ">$1.5M</td>
+            <td style="text-align: right; padding: 4px 3px;">$1.7M</td>
+            <td style="text-align: right; padding: 4px 3px; background-color: #cc0000; color: white;">$6,410</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #fdae6b; font-size: 14px;">■</span> 2</td>
+            <td style="padding: 4px 3px;">Montague Street</td>
+            <td style="text-align: center; padding: 4px 3px;">1998</td>
+            <td style="text-align: right; padding: 4px 3px;">100</td>
+            <td style="text-align: right; padding: 4px 3px;">$210K</td>
+            <td style="text-align: right; padding: 4px 3px;">$214K</td>
+            <td style="text-align: right; padding: 4px 3px;">$2,100</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #f16913; font-size: 14px;">■</span> 3</td>
+            <td style="padding: 4px 3px;">Court-Livingston-Schermerhorn</td>
+            <td style="text-align: center; padding: 4px 3px;">2007</td>
+            <td style="text-align: right; padding: 4px 3px;">220</td>
+            <td style="text-align: right; padding: 4px 3px; ">$1.4M</td>
+            <td style="text-align: right; padding: 4px 3px;">$1.5M</td>
+            <td style="text-align: right; padding: 4px 3px; background-color: #cc0000; color: white;">$6,364</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #a50f15; font-size: 14px;">■</span> 4</td>
+            <td style="padding: 4px 3px;">Fulton Mall Improvement Association</td>
+            <td style="text-align: center; padding: 4px 3px;">1976</td>
+            <td style="text-align: right; padding: 4px 3px;">185</td>
+            <td style="text-align: right; padding: 4px 3px; ">$3.0M</td>
+            <td style="text-align: right; padding: 4px 3px;">$2.7M</td>
+            <td style="text-align: right; padding: 4px 3px; background-color: #cc0000; color: white;">$16,216</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #a50f15; font-size: 14px;">■</span> 5</td>
+            <td style="padding: 4px 3px;">MetroTech</td>
+            <td style="text-align: center; padding: 4px 3px;">1992</td>
+            <td style="text-align: right; padding: 4px 3px;">263</td>
+            <td style="text-align: right; padding: 4px 3px; ">$5.2M</td>
+            <td style="text-align: right; padding: 4px 3px;">$4.8M</td>
+            <td style="text-align: right; padding: 4px 3px; background-color: #cc0000; color: white;">$19,772</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 6</td>
+            <td style="padding: 4px 3px;">Atlantic Avenue</td>
+            <td style="text-align: center; padding: 4px 3px;">2011</td>
+            <td style="text-align: right; padding: 4px 3px;">374</td>
+            <td style="text-align: right; padding: 4px 3px;">$390K</td>
+            <td style="text-align: right; padding: 4px 3px;">$431K</td>
+            <td style="text-align: right; padding: 4px 3px;">$1,043</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #fdae6b; font-size: 14px;">■</span> 7</td>
+            <td style="padding: 4px 3px;">Myrtle Avenue Brooklyn Partnership</td>
+            <td style="text-align: center; padding: 4px 3px;">2005</td>
+            <td style="text-align: right; padding: 4px 3px;">225</td>
+            <td style="text-align: right; padding: 4px 3px;">$575K</td>
+            <td style="text-align: right; padding: 4px 3px;">$1.2M</td>
+            <td style="text-align: right; padding: 4px 3px;">$2,556</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #fdae6b; font-size: 14px;">■</span> 8</td>
+            <td style="padding: 4px 3px;">Fulton Area Business (FAB) Alliance</td>
+            <td style="text-align: center; padding: 4px 3px;">2008</td>
+            <td style="text-align: right; padding: 4px 3px;">236</td>
+            <td style="text-align: right; padding: 4px 3px;">$500K</td>
+            <td style="text-align: right; padding: 4px 3px;">$616K</td>
+            <td style="text-align: right; padding: 4px 3px;">$2,119</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #fdae6b; font-size: 14px;">■</span> 9</td>
+            <td style="padding: 4px 3px;">Bed-Stuy Gateway</td>
+            <td style="text-align: center; padding: 4px 3px;">2009</td>
+            <td style="text-align: right; padding: 4px 3px;">310</td>
+            <td style="text-align: right; padding: 4px 3px;">$675K</td>
+            <td style="text-align: right; padding: 4px 3px;">$854K</td>
+            <td style="text-align: right; padding: 4px 3px;">$2,177</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 10</td>
+            <td style="padding: 4px 3px;">North Flatbush</td>
+            <td style="text-align: center; padding: 4px 3px;">1986</td>
+            <td style="text-align: right; padding: 4px 3px;">192</td>
+            <td style="text-align: right; padding: 4px 3px;">$200K</td>
+            <td style="text-align: right; padding: 4px 3px;">$327K</td>
+            <td style="text-align: right; padding: 4px 3px;">$1,042</td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center; padding: 4px 3px;"><span style="color: #9ecae1; font-size: 14px;">■</span> 11</td>
+            <td style="padding: 4px 3px;">Park Slope 5th Avenue</td>
+            <td style="text-align: center; padding: 4px 3px;">2008</td>
+            <td style="text-align: right; padding: 4px 3px;">557</td>
+            <td style="text-align: right; padding: 4px 3px;">$500K</td>
+            <td style="text-align: right; padding: 4px 3px;">$709K</td>
+            <td style="text-align: right; padding: 4px 3px;">$898</td>
+        </tr>
+    </table>
+
+    <details style="margin-top: 8px;">
+        <summary style="cursor: pointer; font-size: 10px; color: #666; padding: 4px 0;">Show all other Brooklyn BIDs (12 more)...</summary>
+        <table style="border-collapse: collapse; font-size: 10px; width: 100%; margin-top: 6px; table-layout: fixed;">
+            <colgroup>
+                <col style="width: 6%;">
+                <col style="width: 29%;">
+                <col style="width: 7%;">
+                <col style="width: 15%;">
+                <col style="width: 14%;">
+                <col style="width: 14%;">
+                <col style="width: 15%;">
+            </colgroup>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 12</td>
+                <td style="padding: 4px 3px;">Church Flatbush Community Alliance</td>
+                <td style="text-align: center; padding: 4px 3px;">2023</td>
+                <td style="text-align: right; padding: 4px 3px;">538</td>
+                <td style="text-align: right; padding: 4px 3px;">$884K</td>
+                <td style="text-align: right; padding: 4px 3px;">$873K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,643</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 13</td>
+                <td style="padding: 4px 3px;">Bay Ridge 5th Avenue</td>
+                <td style="text-align: center; padding: 4px 3px;">2006</td>
+                <td style="text-align: right; padding: 4px 3px;">350</td>
+                <td style="text-align: right; padding: 4px 3px;">$534K</td>
+                <td style="text-align: right; padding: 4px 3px;">$708K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,526</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 14</td>
+                <td style="padding: 4px 3px;">Kings Highway</td>
+                <td style="text-align: center; padding: 4px 3px;">1990</td>
+                <td style="text-align: right; padding: 4px 3px;">225</td>
+                <td style="text-align: right; padding: 4px 3px;">$400K</td>
+                <td style="text-align: right; padding: 4px 3px;">$495K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,778</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 15</td>
+                <td style="padding: 4px 3px;">Flatbush-Nostrand Junction</td>
+                <td style="text-align: center; padding: 4px 3px;">2006</td>
+                <td style="text-align: right; padding: 4px 3px;">250</td>
+                <td style="text-align: right; padding: 4px 3px;">$350K</td>
+                <td style="text-align: right; padding: 4px 3px;">$501K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,400</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #9ecae1; font-size: 14px;">■</span> 16</td>
+                <td style="padding: 4px 3px;">Sunset Park</td>
+                <td style="text-align: center; padding: 4px 3px;">1995</td>
+                <td style="text-align: right; padding: 4px 3px;">640</td>
+                <td style="text-align: right; padding: 4px 3px;">$300K</td>
+                <td style="text-align: right; padding: 4px 3px;">$367K</td>
+                <td style="text-align: right; padding: 4px 3px;">$469</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 17</td>
+                <td style="padding: 4px 3px;">86th Street Bay Ridge</td>
+                <td style="text-align: center; padding: 4px 3px;">2001</td>
+                <td style="text-align: right; padding: 4px 3px;">194</td>
+                <td style="text-align: right; padding: 4px 3px;">$290K</td>
+                <td style="text-align: right; padding: 4px 3px;">$349K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,495</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 18</td>
+                <td style="padding: 4px 3px;">Grand Street</td>
+                <td style="text-align: center; padding: 4px 3px;">1985</td>
+                <td style="text-align: right; padding: 4px 3px;">212</td>
+                <td style="text-align: right; padding: 4px 3px;">$272K</td>
+                <td style="text-align: right; padding: 4px 3px;">$461K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,283</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 19</td>
+                <td style="padding: 4px 3px;">Graham Avenue</td>
+                <td style="text-align: center; padding: 4px 3px;">1987</td>
+                <td style="text-align: right; padding: 4px 3px;">140</td>
+                <td style="text-align: right; padding: 4px 3px;">$250K</td>
+                <td style="text-align: right; padding: 4px 3px;">$357K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,786</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 20</td>
+                <td style="padding: 4px 3px;">Pitkin Avenue</td>
+                <td style="text-align: center; padding: 4px 3px;">1993</td>
+                <td style="text-align: right; padding: 4px 3px;">208</td>
+                <td style="text-align: right; padding: 4px 3px;">$225K</td>
+                <td style="text-align: right; padding: 4px 3px;">$856K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,082</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #a1d99b; font-size: 14px;">■</span> 21</td>
+                <td style="padding: 4px 3px;">Brighton Beach</td>
+                <td style="text-align: center; padding: 4px 3px;">1987</td>
+                <td style="text-align: right; padding: 4px 3px;">125</td>
+                <td style="text-align: right; padding: 4px 3px;">$220K</td>
+                <td style="text-align: right; padding: 4px 3px;">$313K</td>
+                <td style="text-align: right; padding: 4px 3px;">$1,760</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #fdae6b; font-size: 14px;">■</span> 22</td>
+                <td style="padding: 4px 3px;">East Brooklyn</td>
+                <td style="text-align: center; padding: 4px 3px;">1985</td>
+                <td style="text-align: right; padding: 4px 3px;">70</td>
+                <td style="text-align: right; padding: 4px 3px;">$142K</td>
+                <td style="text-align: right; padding: 4px 3px;">$237K</td>
+                <td style="text-align: right; padding: 4px 3px;">$2,029</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center; padding: 4px 3px;"><span style="color: #999999; font-size: 14px;">■</span> 23</td>
+                <td style="padding: 4px 3px;">Cypress Hills Fulton</td>
+                <td style="text-align: center; padding: 4px 3px;">2023</td>
+                <td style="text-align: right; padding: 4px 3px;">N/A</td>
+                <td style="text-align: right; padding: 4px 3px;">N/A</td>
+                <td style="text-align: right; padding: 4px 3px;">N/A</td>
+                <td style="text-align: right; padding: 4px 3px;">N/A</td>
+            </tr>
+
+        </table>
+    </details>
+
+    <table style="border-collapse: collapse; font-size: 10px; width: 100%; margin-top: 8px; table-layout: fixed;">
+        <colgroup>
+            <col style="width: 6%;">
+            <col style="width: 29%;">
+            <col style="width: 7%;">
+            <col style="width: 15%;">
+            <col style="width: 14%;">
+            <col style="width: 14%;">
+            <col style="width: 15%;">
+        </colgroup>
+        <tr style="border-top: 2px solid #333; background-color: #e8f4e8; font-weight: bold;">
+            <td colspan="2" style="padding: 5px 3px;">Subtotal (BIDs Near Gowanus)</td>
+            <td style="text-align: center; padding: 5px 3px;">1976–2011</td>
+            <td style="text-align: right; padding: 5px 3px;">2,896</td>
+            <td style="text-align: right; padding: 5px 3px;">$14.2M</td>
+            <td style="text-align: right; padding: 5px 3px;">$15.1M</td>
+            <td style="text-align: right; padding: 5px 3px;">$4,903</td>
+        </tr>
+        <tr style="border-top: 1px solid #999; background-color: #eee; font-weight: bold;">
+            <td colspan="2" style="padding: 5px 3px;">Total (All Brooklyn)</td>
+            <td style="text-align: center; padding: 5px 3px;">1976–2023</td>
+            <td style="text-align: right; padding: 5px 3px;">5,848</td>
+            <td style="text-align: right; padding: 5px 3px;">$18.0M</td>
+            <td style="text-align: right; padding: 5px 3px;">$20.6M</td>
+            <td style="text-align: right; padding: 5px 3px;">$3,078</td>
+        </tr>
+    </table>
+    <p style="margin: 8px 0 4px 0; font-size: 9px; color: #888;">
+        Source: NYC Small Business Services (via NYC Open Data API)<br>
+        *Avg/Prop – Average assessment per property (Total Assessment ÷ Properties)<br>
+        Cypress Hills Fulton (2023) has limited data
+    </p>
+    <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #ddd; font-size: 8px; color: #666; line-height: 1.4;">
+        <b>Definitions:</b><br>
+        <b>Properties</b> – Assessed commercial properties (residential/nonprofit/govt typically exempt)<br>
+        <b>Assessment</b> – Mandatory fee on property owners; collected by Dept of Finance with property tax, remitted to BID twice yearly.<br>
+        <b>Budget</b> – Total annual operating funds (assessment ~78% + grants, fundraising, program revenue)
+    </div>
+    <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #ddd; font-size: 8px; color: #666; line-height: 1.6;">
+        <b>Map Color Scale (Avg/Prop):</b><br>
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #9ecae1; vertical-align: middle; margin-right: 3px;"></span> ≤$1,000
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #a1d99b; vertical-align: middle; margin-left: 8px; margin-right: 3px;"></span> $1,001–$2,000
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #fdae6b; vertical-align: middle; margin-left: 8px; margin-right: 3px;"></span> $2,001–$3,000
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #f16913; vertical-align: middle; margin-left: 8px; margin-right: 3px;"></span> $3,001–$7,000
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #a50f15; vertical-align: middle; margin-left: 8px; margin-right: 3px;"></span> >$7,000
+        <span style="display: inline-block; width: 12px; height: 12px; background-color: #999999; vertical-align: middle; margin-left: 8px; margin-right: 3px;"></span> No data
+    </div>
+</div>
+    
+            <div class="folium-map" id="map_29f97117fe7e75d51837f7bfe7ce10e0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_29f97117fe7e75d51837f7bfe7ce10e0 = L.map(
+                "map_29f97117fe7e75d51837f7bfe7ce10e0",
+                {
+                    center: [40.66815823049544, -73.96732737619541],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a13e30d4e41238d956cdd43a7c1dc40a = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a13e30d4e41238d956cdd43a7c1dc40a.addTo(map_29f97117fe7e75d51837f7bfe7ce10e0);
+
+
+            var tile_layer_openstreetmap = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+            );
+
+
+            var feature_group_201b68f74669330f64a3db82db59ce4e = L.featureGroup(
+                {
+}
+            );
+        
+    
+        function geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a50f15", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7 = L.geoJson(null, {
+                onEachFeature: geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_onEachFeature,
+            
+                style: geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_styler,
+            ...{
+}
+        });
+
+        function geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_add (data) {
+            geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7
+                .addData(data);
+        }
+            geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7_add({"bbox": [-73.98865353503467, 40.683259973668655, -73.97395820011764, 40.69599868642493], "features": [{"bbox": [-73.98865353503467, 40.683259973668655, -73.97395820011764, 40.69599868642493], "geometry": {"coordinates": [[[-73.98856084596534, 40.69494430127611], [-73.98847657950012, 40.69599868642493], [-73.98724907747844, 40.69595268731943], [-73.98404789503087, 40.69583696065444], [-73.98368570239316, 40.695822465094736], [-73.98333705455329, 40.695511935299905], [-73.98255894463396, 40.69441595989769], [-73.98258002899199, 40.69400430882516], [-73.98252267425606, 40.693487818803966], [-73.97907122386528, 40.691799976969676], [-73.97719535739739, 40.68969378509375], [-73.97716319232033, 40.68953135946255], [-73.97741959665525, 40.68680188238003], [-73.97533612144036, 40.68529153159444], [-73.97404733275675, 40.68372383912933], [-73.97395820011764, 40.68328883809512], [-73.97396706559118, 40.683259973668655], [-73.97621674081172, 40.683741419795766], [-73.97791475881964, 40.68438767228359], [-73.97805366441371, 40.68444240149314], [-73.98012144516227, 40.686001079942365], [-73.98044656432819, 40.688442367043166], [-73.98316245080814, 40.69010160479335], [-73.98340776723751, 40.690109903861696], [-73.98432934619254, 40.69056699334508], [-73.98646958235695, 40.69142782966523], [-73.98651600998578, 40.691446545107205], [-73.98658026018984, 40.691472444431305], [-73.98718939610592, 40.69172038581252], [-73.98862714881983, 40.692361878897984], [-73.98865353503467, 40.69309801418811], [-73.98864150749132, 40.69334116607288], [-73.98859170399369, 40.69434796898069], [-73.98856084596534, 40.69494430127611]]], "type": "Polygon"}, "id": "0", "properties": {"F_ALL_BIDs": 48.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "MetroTech", "F_ALL_BI_3": 263.0, "F_ALL_BI_4": "https://www.downtownbrooklyn.com/about/metrotech-bid", "F_ALL_BI_6": 5250000.0, "F_ALL_BI_7": 4810794.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 50, "Shape_Ar_1": 3301450.88491, "Shape_Area": 534035.565456, "Shape_Le_1": 46688.7189973, "Shape_Leng": 0.0, "Year_Found": "1992"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#5 MetroTech</b><br>
+    <b>Founded:</b> 1992<br>
+    <b>Properties:</b> 263<br>
+    <b>Assessment:</b> $5,250,000<br>
+    <b>Budget:</b> $4,810,794
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_1f8f7e893370a5e9ae8540dd4d8e20a7.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_04d0a162af9a59b644029cc0fef57b38_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a50f15", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_04d0a162af9a59b644029cc0fef57b38_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_04d0a162af9a59b644029cc0fef57b38 = L.geoJson(null, {
+                onEachFeature: geo_json_04d0a162af9a59b644029cc0fef57b38_onEachFeature,
+            
+                style: geo_json_04d0a162af9a59b644029cc0fef57b38_styler,
+            ...{
+}
+        });
+
+        function geo_json_04d0a162af9a59b644029cc0fef57b38_add (data) {
+            geo_json_04d0a162af9a59b644029cc0fef57b38
+                .addData(data);
+        }
+            geo_json_04d0a162af9a59b644029cc0fef57b38_add({"bbox": [-73.98902386910382, 40.688528362304176, -73.98100198638016, 40.69219511692739], "features": [{"bbox": [-73.98902386910382, 40.688528362304176, -73.98100198638016, 40.69219511692739], "geometry": {"coordinates": [[[-73.98888256949952, 40.69174867783292], [-73.98871240343188, 40.69219511692739], [-73.98837783129422, 40.69218413449193], [-73.98834464573096, 40.69218304128861], [-73.98765014920167, 40.6921529819362], [-73.98677154475149, 40.69169201953711], [-73.98582723572484, 40.69150139452904], [-73.98545241277422, 40.6914645875866], [-73.98486061434313, 40.691277539237646], [-73.98450383674997, 40.691235283786774], [-73.98328289063322, 40.692001378572144], [-73.98274575828046, 40.69197230268329], [-73.98223411113229, 40.69096539712596], [-73.9821554312898, 40.69080945085108], [-73.98207873941905, 40.69065745141288], [-73.98191647672928, 40.69033585213975], [-73.98180317851072, 40.690110769596714], [-73.98178086615569, 40.6900664427245], [-73.98157739325227, 40.68964650992917], [-73.98100198638016, 40.68865983168399], [-73.98109282042843, 40.688528362304176], [-73.9814568734771, 40.68855416740002], [-73.98272975928525, 40.68860551463382], [-73.98358037492609, 40.688926716969554], [-73.98471039267143, 40.68935559851468], [-73.9855848244471, 40.689698599454815], [-73.98695229476982, 40.69023796304186], [-73.98741646146364, 40.69042876194966], [-73.9882193594949, 40.69109962097424], [-73.98902386910382, 40.691212751213456], [-73.98888256949952, 40.69174867783292]]], "type": "Polygon"}, "id": "1", "properties": {"F_ALL_BIDs": 32.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Fulton Mall Improvement Association", "F_ALL_BI_3": 185.0, "F_ALL_BI_4": "https://www.downtownbrooklyn.com/about/fulton-mall-improvement-association", "F_ALL_BI_6": 2950000.0, "F_ALL_BI_7": 2749449.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 34, "Shape_Ar_1": 892300.884018, "Shape_Area": 144333.96776, "Shape_Le_1": 16356.4329488, "Shape_Leng": 0.0, "Year_Found": "1976"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_04d0a162af9a59b644029cc0fef57b38.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#4 Fulton Mall Improvement Association</b><br>
+    <b>Founded:</b> 1976<br>
+    <b>Properties:</b> 185<br>
+    <b>Assessment:</b> $2,950,000<br>
+    <b>Budget:</b> $2,749,449
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_04d0a162af9a59b644029cc0fef57b38.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_0686fcbaa1a223bf9c86546d85eac991_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#f16913", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_0686fcbaa1a223bf9c86546d85eac991_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_0686fcbaa1a223bf9c86546d85eac991 = L.geoJson(null, {
+                onEachFeature: geo_json_0686fcbaa1a223bf9c86546d85eac991_onEachFeature,
+            
+                style: geo_json_0686fcbaa1a223bf9c86546d85eac991_styler,
+            ...{
+}
+        });
+
+        function geo_json_0686fcbaa1a223bf9c86546d85eac991_add (data) {
+            geo_json_0686fcbaa1a223bf9c86546d85eac991
+                .addData(data);
+        }
+            geo_json_0686fcbaa1a223bf9c86546d85eac991_add({"bbox": [-73.9961830574393, 40.699307250443375, -73.98253531804367, 40.705653002149035], "features": [{"bbox": [-73.9961830574393, 40.699307250443375, -73.98253531804367, 40.705653002149035], "geometry": {"coordinates": [[[-73.99616763156925, 40.70336488712094], [-73.9961830574393, 40.70337142957655], [-73.99470849895157, 40.70417019068222], [-73.9945319009465, 40.7042528001412], [-73.99380801423605, 40.70452440969891], [-73.99341867451042, 40.70462090627985], [-73.99340520606938, 40.70462389517307], [-73.99321888919123, 40.704639258449745], [-73.99248036173829, 40.704646044576805], [-73.99016259511752, 40.704949949315036], [-73.9901435149009, 40.70495336517614], [-73.98801094675575, 40.70512741041978], [-73.98640250066312, 40.70542020468223], [-73.98585700768997, 40.70546370211103], [-73.98344380944333, 40.705653002149035], [-73.98274232671606, 40.70558456780165], [-73.98253531804367, 40.70552677585201], [-73.98267535371838, 40.70423130777209], [-73.9827469719044, 40.70368903448079], [-73.98415312368324, 40.70240662120457], [-73.9848503969051, 40.701528183233336], [-73.9870409539968, 40.70029116127334], [-73.98735892347138, 40.699307250443375], [-73.98773581075052, 40.69932063513227], [-73.98996296520689, 40.70080849411362], [-73.99052694011868, 40.700819706679404], [-73.99067356942754, 40.700822620829314], [-73.99084797015344, 40.7008779882912], [-73.99267965118743, 40.70229634914567], [-73.99322804482061, 40.702534776609234], [-73.99509311174215, 40.70306296779222], [-73.99616763156925, 40.70336488712094]]], "type": "Polygon"}, "id": "2", "properties": {"F_ALL_BIDs": 23.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "DUMBO", "F_ALL_BI_3": 234.0, "F_ALL_BI_4": "https://dumbo.is/", "F_ALL_BI_6": 1455178.0, "F_ALL_BI_7": 1735625.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 25, "Shape_Ar_1": 3026970.89904, "Shape_Area": 489816.156008, "Shape_Le_1": 43291.0737165, "Shape_Leng": 0.0, "Year_Found": "2005"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_0686fcbaa1a223bf9c86546d85eac991.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#1 DUMBO</b><br>
+    <b>Founded:</b> 2005<br>
+    <b>Properties:</b> 234<br>
+    <b>Assessment:</b> $1,455,178<br>
+    <b>Budget:</b> $1,735,625
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_0686fcbaa1a223bf9c86546d85eac991.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_cc6800475cef211da43901b6a187ac37_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#f16913", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_cc6800475cef211da43901b6a187ac37_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_cc6800475cef211da43901b6a187ac37 = L.geoJson(null, {
+                onEachFeature: geo_json_cc6800475cef211da43901b6a187ac37_onEachFeature,
+            
+                style: geo_json_cc6800475cef211da43901b6a187ac37_styler,
+            ...{
+}
+        });
+
+        function geo_json_cc6800475cef211da43901b6a187ac37_add (data) {
+            geo_json_cc6800475cef211da43901b6a187ac37
+                .addData(data);
+        }
+            geo_json_cc6800475cef211da43901b6a187ac37_add({"bbox": [-73.99268920297385, 40.686322529158325, -73.97973346728261, 40.694980051961345], "features": [{"bbox": [-73.99268920297385, 40.686322529158325, -73.97973346728261, 40.694980051961345], "geometry": {"coordinates": [[[-73.9917149315392, 40.69219203961156], [-73.99058899214523, 40.69495393128256], [-73.99049879949409, 40.69496191167515], [-73.99024629294917, 40.69497761772784], [-73.99014167694781, 40.694980051961345], [-73.98912135068517, 40.69493859642125], [-73.98912963494874, 40.694779207645745], [-73.98913336205885, 40.694708064297956], [-73.98921389871902, 40.693072353885924], [-73.98732479737205, 40.69072220047094], [-73.985262135224, 40.689349293767044], [-73.98338429875072, 40.68893142103869], [-73.98236044121069, 40.688842393783666], [-73.9813914572598, 40.68865279734852], [-73.98088260297385, 40.68852030621333], [-73.97973346728261, 40.68695322918996], [-73.98016677774476, 40.686322529158325], [-73.98226808900958, 40.68683139579785], [-73.98230900996573, 40.68684754108348], [-73.98237181388221, 40.686872281467984], [-73.98240844628117, 40.68688672379943], [-73.98493444597806, 40.68785757888729], [-73.98499397284033, 40.68788094498189], [-73.98504322297578, 40.6879002744707], [-73.98527267695385, 40.687990360154615], [-73.98598880222026, 40.68826975701049], [-73.98853648545146, 40.68852379307647], [-73.99105392330537, 40.689406761901154], [-73.99268920297385, 40.689944110975645], [-73.99247339440494, 40.69054182589496], [-73.99212654858553, 40.69138348664087], [-73.99207186723588, 40.69149862641451], [-73.99204268726051, 40.69155892619559], [-73.9917149315392, 40.69219203961156]]], "type": "Polygon"}, "id": "3", "properties": {"F_ALL_BIDs": 18.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Court-Livingston-Schermerhorn", "F_ALL_BI_3": 220.0, "F_ALL_BI_4": "https://downtownbrooklyn.com/about/court-livingston-schermerhorn-bid", "F_ALL_BI_6": 1400000.0, "F_ALL_BI_7": 1455178.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 20, "Shape_Ar_1": 1781571.2138, "Shape_Area": 288174.885377, "Shape_Le_1": 30853.452356, "Shape_Leng": 0.0, "Year_Found": "2007"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_cc6800475cef211da43901b6a187ac37.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#3 Court-Livingston-Schermerhorn</b><br>
+    <b>Founded:</b> 2007<br>
+    <b>Properties:</b> 220<br>
+    <b>Assessment:</b> $1,400,000<br>
+    <b>Budget:</b> $1,455,178
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_cc6800475cef211da43901b6a187ac37.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_03dd379944230102668652e1ca6565c7_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_03dd379944230102668652e1ca6565c7_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_03dd379944230102668652e1ca6565c7 = L.geoJson(null, {
+                onEachFeature: geo_json_03dd379944230102668652e1ca6565c7_onEachFeature,
+            
+                style: geo_json_03dd379944230102668652e1ca6565c7_styler,
+            ...{
+}
+        });
+
+        function geo_json_03dd379944230102668652e1ca6565c7_add (data) {
+            geo_json_03dd379944230102668652e1ca6565c7
+                .addData(data);
+        }
+            geo_json_03dd379944230102668652e1ca6565c7_add({"bbox": [-73.97078883240418, 40.64407323488233, -73.95590710694718, 40.655621486276544], "features": [{"bbox": [-73.97078883240418, 40.64407323488233, -73.95590710694718, 40.655621486276544], "geometry": {"coordinates": [[[-73.97072179742274, 40.64654818806066], [-73.97078883240418, 40.64677984709994], [-73.9689581332288, 40.64764603693871], [-73.96807970125516, 40.64800218672889], [-73.96752470769958, 40.64814123606395], [-73.96541385273316, 40.648912716331814], [-73.96320909687012, 40.650183943537904], [-73.96251594511878, 40.650654760541755], [-73.96016843707561, 40.653173166819315], [-73.96019755776216, 40.65403154394822], [-73.9602076566226, 40.654085138823746], [-73.9606819841606, 40.65522916559603], [-73.95998662704525, 40.65550127279138], [-73.95969891821933, 40.65559992642818], [-73.95935933977057, 40.655621486276544], [-73.95877486799894, 40.654157723313], [-73.95876952212467, 40.65410784273979], [-73.95872033127803, 40.65286284314674], [-73.95853313764418, 40.651943509536125], [-73.95593081528413, 40.64995168632345], [-73.95590710694718, 40.64926799991227], [-73.95619624589104, 40.64670155787034], [-73.95739736618943, 40.644121310543454], [-73.95777439809734, 40.64410083688134], [-73.95836190347968, 40.64407323488233], [-73.95839211561932, 40.64422603986895], [-73.95842848121865, 40.64440996962928], [-73.95846196771747, 40.64457933969553], [-73.95853005732107, 40.645129552073804], [-73.95855068623325, 40.64523480328857], [-73.9585963565823, 40.6457258768699], [-73.95860070891985, 40.645829540386075], [-73.95864499765999, 40.64624052791502], [-73.95866887128697, 40.64695915344289], [-73.9586857937503, 40.64735055967473], [-73.961656499937, 40.64953831029218], [-73.9623824222299, 40.649201236102506], [-73.9637355096266, 40.64845540939456], [-73.96427406760573, 40.64840951856381], [-73.96718892193796, 40.6479381568159], [-73.96724813259331, 40.64791475763788], [-73.96730095712525, 40.647893880283306], [-73.96735487221197, 40.64787257284749], [-73.96740376122467, 40.64785325288213], [-73.96746492302081, 40.64782908212941], [-73.96766714187609, 40.647750670083504], [-73.96773666788582, 40.64772304164927], [-73.96780374868136, 40.64769638581555], [-73.967870906732, 40.64766969793709], [-73.9679406070149, 40.647642000629816], [-73.96800637537179, 40.64761586549008], [-73.9680774581619, 40.64758761880766], [-73.9681425384093, 40.64756175764163], [-73.96821151465006, 40.6475343472347], [-73.96827612058698, 40.64750867416411], [-73.96834673894811, 40.647480610099834], [-73.96861472256704, 40.647380447705416], [-73.96868823170672, 40.64735179265595], [-73.96875003669659, 40.64732769942196], [-73.96882324400235, 40.64729916362673], [-73.96888720225395, 40.64727423066414], [-73.96895986967223, 40.64724590477351], [-73.96902237804296, 40.647221537504976], [-73.96942432023368, 40.647055133584566], [-73.96949716282344, 40.647026800103546], [-73.96955287364243, 40.64700513046916], [-73.9696003451136, 40.64698666564228], [-73.96965256507941, 40.646966354394976], [-73.96970105434181, 40.64694749355604], [-73.96975666365115, 40.6469258634279], [-73.96980277956457, 40.646907926126815], [-73.96985635418982, 40.6468870873077], [-73.96990484345221, 40.64686822576475], [-73.97025460789797, 40.64673217821718], [-73.97043500577671, 40.64666115398597], [-73.97051112272567, 40.64663117157384], [-73.9705823411614, 40.646603119409185], [-73.97065289843707, 40.64657532759995], [-73.97072179742274, 40.64654818806066]]], "type": "Polygon"}, "id": "4", "properties": {"F_ALL_BIDs": 15.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Church Flatbush Community Alliance", "F_ALL_BI_3": 538.0, "F_ALL_BI_4": "https://churchflatbush.org/", "F_ALL_BI_6": 883500.0, "F_ALL_BI_7": 873034.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 17, "Shape_Ar_1": 1594598.91186, "Shape_Area": 257618.363874, "Shape_Le_1": 34483.4068185, "Shape_Leng": 34483.4068185, "Year_Found": "2023"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_03dd379944230102668652e1ca6565c7.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#12 Church Flatbush Community Alliance</b><br>
+    <b>Founded:</b> 2023<br>
+    <b>Properties:</b> 538<br>
+    <b>Assessment:</b> $883,500<br>
+    <b>Budget:</b> $873,034
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_03dd379944230102668652e1ca6565c7.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_2be899d7e31732128f777c160e795810_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#fdae6b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_2be899d7e31732128f777c160e795810_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_2be899d7e31732128f777c160e795810 = L.geoJson(null, {
+                onEachFeature: geo_json_2be899d7e31732128f777c160e795810_onEachFeature,
+            
+                style: geo_json_2be899d7e31732128f777c160e795810_styler,
+            ...{
+}
+        });
+
+        function geo_json_2be899d7e31732128f777c160e795810_add (data) {
+            geo_json_2be899d7e31732128f777c160e795810
+                .addData(data);
+        }
+            geo_json_2be899d7e31732128f777c160e795810_add({"bbox": [-73.95850818603886, 40.67862284670537, -73.93520656939009, 40.682070057938965], "features": [{"bbox": [-73.95850818603886, 40.67862284670537, -73.93520656939009, 40.682070057938965], "geometry": {"coordinates": [[[-73.95846767920605, 40.68184732088056], [-73.95850818603886, 40.682050365027585], [-73.95831354986288, 40.682070057938965], [-73.95769663723138, 40.6819782114531], [-73.95687098128072, 40.68181538757198], [-73.95526892759965, 40.681543921813685], [-73.95503834443926, 40.681512980234494], [-73.95396621592745, 40.681215187578104], [-73.95033182093412, 40.68165791777022], [-73.95028350324992, 40.6816638812675], [-73.95021503006569, 40.68167233261997], [-73.95014680930808, 40.68168075672202], [-73.95007649457754, 40.681689427428644], [-73.95001043606479, 40.68169757767383], [-73.94998544852689, 40.68170066841768], [-73.94956148413694, 40.68174527879637], [-73.94949668955381, 40.681752496430626], [-73.94943358739668, 40.68175952263843], [-73.94937023460957, 40.6817665767759], [-73.94930338288445, 40.68177401240142], [-73.9492382631112, 40.68178125796299], [-73.94917170064359, 40.681788667018914], [-73.9491051741086, 40.681796075392796], [-73.94904174855795, 40.6818031295264], [-73.94897486090021, 40.681810593078296], [-73.9489200528881, 40.681816689401636], [-73.94885421176767, 40.68182401534361], [-73.94879143480067, 40.6818310142947], [-73.94872591797206, 40.68183828641803], [-73.94865744388952, 40.68184591482343], [-73.94863732342377, 40.68184815606752], [-73.9458840373836, 40.6806539049195], [-73.94466608625005, 40.68053453292294], [-73.94388375424889, 40.68052915791829], [-73.94137563192449, 40.68043549106988], [-73.93908034564372, 40.68041758321565], [-73.93790847269432, 40.680196276020865], [-73.93762572526371, 40.68013433914098], [-73.93520656939009, 40.679521439080936], [-73.93575872426936, 40.67900227254931], [-73.93577074103291, 40.67899099840483], [-73.93582990228091, 40.6789937758953], [-73.93589836378702, 40.67899699824739], [-73.9359258342684, 40.67899830353838], [-73.93881113582442, 40.679429129236894], [-73.94188470989094, 40.67932353888106], [-73.94189876852514, 40.67932409546641], [-73.94196038217385, 40.679326541853094], [-73.94254066959286, 40.67935870048677], [-73.94255462132756, 40.67935950232346], [-73.94262578766099, 40.67936351831949], [-73.94270135214606, 40.67936778297319], [-73.94277082335854, 40.67937168792418], [-73.94284548593508, 40.6793759239647], [-73.94291755238045, 40.67937999514132], [-73.94298951282458, 40.67938403770502], [-73.9430614714721, 40.67938810819987], [-73.94331628399233, 40.6794024792589], [-73.9434200780352, 40.67940834894488], [-73.94356785269608, 40.67941706763487], [-73.9441544947974, 40.679440574302], [-73.94459061249482, 40.67946400670415], [-73.94500845217112, 40.67948814215152], [-73.94519610214914, 40.679498990428655], [-73.94585563265434, 40.679536878996956], [-73.94930044269852, 40.67862284670537], [-73.94981068757654, 40.67863953898909], [-73.94989717467715, 40.67864533993479], [-73.95313309407844, 40.68020883683518], [-73.95374889639221, 40.680255418374195], [-73.9556623259137, 40.68034040846358], [-73.95575021348785, 40.680359381123516], [-73.95585309663902, 40.680381570613285], [-73.95591391078715, 40.68039471453757], [-73.95828175040012, 40.681205387320915], [-73.9583661722739, 40.681348832941126], [-73.95846767920605, 40.68184732088056]]], "type": "Polygon"}, "id": "5", "properties": {"F_ALL_BIDs": 9.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Bed-Stuy Gateway", "F_ALL_BI_3": 310.0, "F_ALL_BI_4": "https://thebedstuybid.org/", "F_ALL_BI_6": 675000.0, "F_ALL_BI_7": 854385.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 11, "Shape_Ar_1": 1297728.62786, "Shape_Area": 209850.797665, "Shape_Le_1": 32305.7031442, "Shape_Leng": 0.0, "Year_Found": "2009"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_2be899d7e31732128f777c160e795810.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#9 Bed-Stuy Gateway</b><br>
+    <b>Founded:</b> 2009<br>
+    <b>Properties:</b> 310<br>
+    <b>Assessment:</b> $675,000<br>
+    <b>Budget:</b> $854,385
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_2be899d7e31732128f777c160e795810.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_3f6d8434bf129566cbc3eb990183a8e5_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#fdae6b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_3f6d8434bf129566cbc3eb990183a8e5_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_3f6d8434bf129566cbc3eb990183a8e5 = L.geoJson(null, {
+                onEachFeature: geo_json_3f6d8434bf129566cbc3eb990183a8e5_onEachFeature,
+            
+                style: geo_json_3f6d8434bf129566cbc3eb990183a8e5_styler,
+            ...{
+}
+        });
+
+        function geo_json_3f6d8434bf129566cbc3eb990183a8e5_add (data) {
+            geo_json_3f6d8434bf129566cbc3eb990183a8e5
+                .addData(data);
+        }
+            geo_json_3f6d8434bf129566cbc3eb990183a8e5_add({"bbox": [-73.98320895479377, 40.68974795821562, -73.96101660750224, 40.69614668457528], "features": [{"bbox": [-73.98320895479377, 40.68974795821562, -73.96101660750224, 40.69614668457528], "geometry": {"coordinates": [[[-73.98320895479377, 40.69387568475418], [-73.98318000388879, 40.69443712237571], [-73.98234582382439, 40.695254796937824], [-73.9817006636688, 40.69574699795781], [-73.97993193387497, 40.696139634684215], [-73.97991560609636, 40.69614270636902], [-73.97989316707887, 40.69614581347006], [-73.9798835524104, 40.69614668457528], [-73.9783798912024, 40.69608164860357], [-73.97623711819563, 40.69596638598138], [-73.97362264432472, 40.69586864001037], [-73.97111687828132, 40.6937693789646], [-73.97007862344225, 40.693709865139155], [-73.96787098308879, 40.69390271445108], [-73.96751133447997, 40.693944425369295], [-73.96460458295158, 40.69399798817083], [-73.9644998348979, 40.694010322300564], [-73.96442774060476, 40.69401881022926], [-73.9643352904873, 40.694029694964335], [-73.96424195193602, 40.69404068526881], [-73.96404453637254, 40.694062797325536], [-73.96394912450958, 40.69407343140701], [-73.96385440345108, 40.694083987840976], [-73.96376519894675, 40.69409392855521], [-73.96367599534071, 40.694103871311256], [-73.96358679263301, 40.69411381270363], [-73.96330742196952, 40.69414494663391], [-73.96311041783447, 40.694167782668806], [-73.96274877137245, 40.69420932859411], [-73.96265740911478, 40.69421982370729], [-73.9625698422392, 40.69422988359424], [-73.96248582730226, 40.694239536180326], [-73.96238859275759, 40.69425070489904], [-73.96126082080043, 40.694335555224626], [-73.9612068814592, 40.69409448229279], [-73.96101660750224, 40.69323511620995], [-73.96283086032142, 40.69233257362835], [-73.96365107876967, 40.69223895606171], [-73.96730872575583, 40.69292164623797], [-73.96737703095509, 40.692913883558134], [-73.96743683360017, 40.69290708738129], [-73.96750456926756, 40.69289938804364], [-73.96767714821004, 40.692879771892656], [-73.96787478475906, 40.692859369046204], [-73.96861456985346, 40.69277227255832], [-73.96935692233288, 40.692746008660336], [-73.9703390028223, 40.692779834325], [-73.97064955400926, 40.69280993494274], [-73.97136819096521, 40.69287899269544], [-73.97326976182663, 40.68974795821562], [-73.9736692219722, 40.69295421651717], [-73.97574025821534, 40.69346325932647], [-73.97743715602412, 40.69133266193263], [-73.97711724349355, 40.68989332535718], [-73.97880996503456, 40.69200430468693], [-73.98111468003255, 40.69285062214541], [-73.98255699439149, 40.692753289128355], [-73.98264672710522, 40.69275409693398], [-73.98320895479377, 40.69387568475418]]], "type": "Polygon"}, "id": "6", "properties": {"F_ALL_BIDs": 52.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Myrtle Avenue Brooklyn Partnership", "F_ALL_BI_3": 225.0, "F_ALL_BI_4": "https://myrtleavenue.org/", "F_ALL_BI_6": 575000.0, "F_ALL_BI_7": 1193886.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 54, "Shape_Ar_1": 3974767.71917, "Shape_Area": 642993.535619, "Shape_Le_1": 37646.6598243, "Shape_Leng": 0.0, "Year_Found": "2005"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_3f6d8434bf129566cbc3eb990183a8e5.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#7 Myrtle Avenue Brooklyn Partnership</b><br>
+    <b>Founded:</b> 2005<br>
+    <b>Properties:</b> 225<br>
+    <b>Assessment:</b> $575,000<br>
+    <b>Budget:</b> $1,193,886
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_3f6d8434bf129566cbc3eb990183a8e5.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_50efb4230f7455246492d68b9241ca3e_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_50efb4230f7455246492d68b9241ca3e_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_50efb4230f7455246492d68b9241ca3e = L.geoJson(null, {
+                onEachFeature: geo_json_50efb4230f7455246492d68b9241ca3e_onEachFeature,
+            
+                style: geo_json_50efb4230f7455246492d68b9241ca3e_styler,
+            ...{
+}
+        });
+
+        function geo_json_50efb4230f7455246492d68b9241ca3e_add (data) {
+            geo_json_50efb4230f7455246492d68b9241ca3e
+                .addData(data);
+        }
+            geo_json_50efb4230f7455246492d68b9241ca3e_add({"bbox": [-74.02605896305388, 40.62197516742724, -74.0177098707846, 40.63729702241296], "features": [{"bbox": [-74.02605896305388, 40.62197516742724, -74.0177098707846, 40.63729702241296], "geometry": {"coordinates": [[[-74.02180390855598, 40.63289381338973], [-74.02223193063604, 40.636911030499185], [-74.02184206270105, 40.63729702241296], [-74.02140762036167, 40.63722944428472], [-74.01989668908807, 40.636907505489084], [-74.0193126664741, 40.63664347413477], [-74.01884766883862, 40.63629230077419], [-74.0177098707846, 40.63478575782965], [-74.01791979449008, 40.63431161868258], [-74.01999668685055, 40.633107302028], [-74.02137784839651, 40.63112462951078], [-74.02166746344749, 40.63043234012296], [-74.02195107865067, 40.62959180390317], [-74.02233261740635, 40.62878574996412], [-74.02293195360097, 40.62733539546538], [-74.0232469568385, 40.6266074676398], [-74.02384116994108, 40.625147446882345], [-74.02465805294467, 40.622907058593654], [-74.02496570796319, 40.62219139718973], [-74.02513214422578, 40.622032629531994], [-74.02519364828002, 40.62197516742724], [-74.0257428288374, 40.62230140152094], [-74.02605896305388, 40.62249165434604], [-74.02594960035454, 40.62277409046009], [-74.0256137669822, 40.62363438447265], [-74.02480348030772, 40.62572845281217], [-74.02423046834417, 40.627192893169045], [-74.02369012361594, 40.62860805492037], [-74.02291852109252, 40.63018273232063], [-74.02261877124855, 40.630907086986184], [-74.02235026211517, 40.63155883503061], [-74.02217776402104, 40.631996470280235], [-74.02208284712981, 40.63226245818652], [-74.02180390855598, 40.63289381338973]]], "type": "Polygon"}, "id": "7", "properties": {"F_ALL_BIDs": 6.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Bay Ridge 5th Avenue", "F_ALL_BI_3": 350.0, "F_ALL_BI_4": "https://www.bayridgebid.com/", "F_ALL_BI_6": 534000.0, "F_ALL_BI_7": 707583.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 8, "Shape_Ar_1": 1051913.68227, "Shape_Area": 169851.338106, "Shape_Le_1": 29998.2136295, "Shape_Leng": 0.0, "Year_Found": "2006"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_50efb4230f7455246492d68b9241ca3e.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#13 Bay Ridge 5th Avenue</b><br>
+    <b>Founded:</b> 2006<br>
+    <b>Properties:</b> 350<br>
+    <b>Assessment:</b> $534,000<br>
+    <b>Budget:</b> $707,583
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_50efb4230f7455246492d68b9241ca3e.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_96f16c11f7916da17d8203a080d28659_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#9ecae1", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_96f16c11f7916da17d8203a080d28659_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_96f16c11f7916da17d8203a080d28659 = L.geoJson(null, {
+                onEachFeature: geo_json_96f16c11f7916da17d8203a080d28659_onEachFeature,
+            
+                style: geo_json_96f16c11f7916da17d8203a080d28659_styler,
+            ...{
+}
+        });
+
+        function geo_json_96f16c11f7916da17d8203a080d28659_add (data) {
+            geo_json_96f16c11f7916da17d8203a080d28659
+                .addData(data);
+        }
+            geo_json_96f16c11f7916da17d8203a080d28659_add({"bbox": [-73.9919995824999, 40.66240174630233, -73.97630863307539, 40.682203810584106], "features": [{"bbox": [-73.9919995824999, 40.66240174630233, -73.97630863307539, 40.682203810584106], "geometry": {"coordinates": [[[-73.98598914807167, 40.67337887082236], [-73.98562999623115, 40.67381423494184], [-73.98223712947164, 40.674745668208175], [-73.98144980104087, 40.676341851317964], [-73.98139565598544, 40.67641319004539], [-73.97972444370559, 40.6789456327105], [-73.97966170895941, 40.67904983798656], [-73.97958258445087, 40.67918126338861], [-73.97909623026784, 40.67979187825693], [-73.97708065151878, 40.682203810584106], [-73.97677840076503, 40.68208759203701], [-73.97632422064221, 40.68183662558094], [-73.97630863307539, 40.6817653914356], [-73.97789141969024, 40.6791434441064], [-73.97790149070288, 40.6791287677884], [-73.97793355067706, 40.67908204648548], [-73.97796518215486, 40.67903593691949], [-73.97799864978907, 40.678987162238585], [-73.97803281451597, 40.67893737994001], [-73.97805493283491, 40.67890514548329], [-73.9791322859484, 40.677592809854694], [-73.98025033094765, 40.675925433341625], [-73.98031576962282, 40.67582407370237], [-73.98039571429322, 40.67570353554174], [-73.98111181530511, 40.674721139295094], [-73.98151729056985, 40.67425222606294], [-73.98159710588284, 40.67415639678087], [-73.98160800334556, 40.674143250945264], [-73.98164688153274, 40.67409619639506], [-73.98168722666877, 40.67404713331289], [-73.98172519396427, 40.67400097052886], [-73.98182931229896, 40.67387438312131], [-73.98229443929182, 40.673346591436434], [-73.98232691608429, 40.67330712687146], [-73.98233744613606, 40.67329432357071], [-73.98268140746508, 40.672942310187146], [-73.98317516466436, 40.67233312196028], [-73.98436257307826, 40.66901059436886], [-73.98446046608804, 40.66889224332564], [-73.98473921601564, 40.668551310228835], [-73.98755918579599, 40.66682746834124], [-73.98878741185979, 40.66404266723577], [-73.98892887765241, 40.66243985174063], [-73.98896903144728, 40.66240174630233], [-73.99130446523473, 40.66291982439647], [-73.9919995824999, 40.66333653347288], [-73.99135912682146, 40.66517187452425], [-73.99135593331063, 40.66517578371372], [-73.99128295507526, 40.66526498226575], [-73.98999991021957, 40.66632954947979], [-73.98846148959997, 40.667273145649936], [-73.98755803954569, 40.669928871761286], [-73.98615891079572, 40.67262179321919], [-73.98598914807167, 40.67337887082236]]], "type": "Polygon"}, "id": "8", "properties": {"F_ALL_BIDs": 56.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Park Slope 5th Avenue", "F_ALL_BI_3": 557.0, "F_ALL_BI_4": "https://parkslopefifthavenuebid.com/", "F_ALL_BI_6": 500000.0, "F_ALL_BI_7": 709168.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 58, "Shape_Ar_1": 1640649.14349, "Shape_Area": 265234.723059, "Shape_Le_1": 44434.8667245, "Shape_Leng": 0.0, "Year_Found": "2008"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_96f16c11f7916da17d8203a080d28659.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#11 Park Slope 5th Avenue</b><br>
+    <b>Founded:</b> 2008<br>
+    <b>Properties:</b> 557<br>
+    <b>Assessment:</b> $500,000<br>
+    <b>Budget:</b> $709,168
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_96f16c11f7916da17d8203a080d28659.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_77444a30bc6deb96ee6f47cfd15b9326_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#fdae6b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_77444a30bc6deb96ee6f47cfd15b9326_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_77444a30bc6deb96ee6f47cfd15b9326 = L.geoJson(null, {
+                onEachFeature: geo_json_77444a30bc6deb96ee6f47cfd15b9326_onEachFeature,
+            
+                style: geo_json_77444a30bc6deb96ee6f47cfd15b9326_styler,
+            ...{
+}
+        });
+
+        function geo_json_77444a30bc6deb96ee6f47cfd15b9326_add (data) {
+            geo_json_77444a30bc6deb96ee6f47cfd15b9326
+                .addData(data);
+        }
+            geo_json_77444a30bc6deb96ee6f47cfd15b9326_add({"bbox": [-73.97917881957844, 40.68126392247965, -73.95861833117078, 40.688771888472694], "features": [{"bbox": [-73.97917881957844, 40.68126392247965, -73.95861833117078, 40.688771888472694], "geometry": {"coordinates": [[[-73.97896281427847, 40.68858587542163], [-73.97889072357862, 40.68874192975529], [-73.97852779342404, 40.688771888472694], [-73.97480771352564, 40.687559811171965], [-73.97258645381417, 40.686288898440225], [-73.96991646585536, 40.685874631804225], [-73.96824301677046, 40.684495004625845], [-73.96542893544678, 40.68371831519691], [-73.9650221926592, 40.683624013853944], [-73.96185620800108, 40.6830235903577], [-73.95914065479612, 40.682339124326624], [-73.95877959762889, 40.682138940165785], [-73.95872809092548, 40.68188240145122], [-73.95861833117078, 40.681286867157844], [-73.95864430326229, 40.68128284923405], [-73.9587666726686, 40.68126392247965], [-73.95878258991712, 40.68126724690726], [-73.95885345621325, 40.681282048101686], [-73.95891837117063, 40.68129560672045], [-73.9589895330125, 40.681310469219696], [-73.95906575775929, 40.681326388991636], [-73.95913428843569, 40.68134070309034], [-73.95921427173364, 40.681357408999375], [-73.95928090516816, 40.68137132456948], [-73.9623747578039, 40.68202591714334], [-73.96557683497349, 40.68224138901996], [-73.96980307960186, 40.68344530266094], [-73.97076228359427, 40.68332277006128], [-73.97485857703535, 40.68594514426759], [-73.97720572934566, 40.68653697627175], [-73.97810791187709, 40.68694654411816], [-73.97909510737374, 40.68752567769275], [-73.97917881957844, 40.688106555466945], [-73.97896281427847, 40.68858587542163]]], "type": "Polygon"}, "id": "9", "properties": {"F_ALL_BIDs": 26.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Fulton Area Business (FAB) Alliance", "F_ALL_BI_3": 236.0, "F_ALL_BI_4": "http://www.fabfulton.org/", "F_ALL_BI_6": 500000.0, "F_ALL_BI_7": 616248.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 28, "Shape_Ar_1": 1067699.47478, "Shape_Area": 172675.303312, "Shape_Le_1": 30948.7286646, "Shape_Leng": 0.0, "Year_Found": "2008"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_77444a30bc6deb96ee6f47cfd15b9326.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#8 Fulton Area Business (FAB) Alliance</b><br>
+    <b>Founded:</b> 2008<br>
+    <b>Properties:</b> 236<br>
+    <b>Assessment:</b> $500,000<br>
+    <b>Budget:</b> $616,248
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_77444a30bc6deb96ee6f47cfd15b9326.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_f1667928692adca400808693c477ba35_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_f1667928692adca400808693c477ba35_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_f1667928692adca400808693c477ba35 = L.geoJson(null, {
+                onEachFeature: geo_json_f1667928692adca400808693c477ba35_onEachFeature,
+            
+                style: geo_json_f1667928692adca400808693c477ba35_styler,
+            ...{
+}
+        });
+
+        function geo_json_f1667928692adca400808693c477ba35_add (data) {
+            geo_json_f1667928692adca400808693c477ba35
+                .addData(data);
+        }
+            geo_json_f1667928692adca400808693c477ba35_add({"bbox": [-73.96669456556239, 40.60560836496997, -73.95365137797992, 40.61080199692037], "features": [{"bbox": [-73.96669456556239, 40.60560836496997, -73.95365137797992, 40.61080199692037], "geometry": {"coordinates": [[[-73.96665548615258, 40.606061273898995], [-73.96669456556239, 40.60627145467001], [-73.96520756450964, 40.6067284619958], [-73.96426440173327, 40.607043934355154], [-73.96184033656664, 40.608075554916546], [-73.96150625490911, 40.60827603295381], [-73.9613501205262, 40.60829198379551], [-73.96123212861026, 40.60830404802784], [-73.96093587950092, 40.608348275798654], [-73.96079249400853, 40.6083658217735], [-73.95968141813925, 40.60868322935457], [-73.95819592445957, 40.6103103902686], [-73.95817240387049, 40.61031301649577], [-73.95798525245746, 40.610333891281535], [-73.95793284474378, 40.61033971862576], [-73.95612149617793, 40.6102709982125], [-73.95464381604458, 40.61071420336657], [-73.95457534465699, 40.61072224498756], [-73.9541645127382, 40.61076479082043], [-73.95403120724163, 40.61077810599385], [-73.953786135154, 40.61080199692037], [-73.95371087879111, 40.61051733065257], [-73.95365137797992, 40.610209698144864], [-73.95404902891855, 40.60995022722743], [-73.95557251504654, 40.60922650183457], [-73.9555769078083, 40.6092260101336], [-73.95578909167503, 40.60920163512603], [-73.95729167310806, 40.606982239862866], [-73.95727390353342, 40.606891654660416], [-73.95725609712785, 40.606803759807946], [-73.95722055618195, 40.60662805227777], [-73.95718498020175, 40.60644957264094], [-73.95714944105248, 40.60627111912554], [-73.95711746551996, 40.60609538564293], [-73.95709609819261, 40.60600202757518], [-73.9572044709485, 40.6058759174559], [-73.95734497015386, 40.60585966527325], [-73.95736629166714, 40.60597223764358], [-73.95738046708232, 40.606049124693364], [-73.95739471615934, 40.606125984374636], [-73.95740892840544, 40.60620287056557], [-73.9574231433465, 40.60627701297816], [-73.95743731966002, 40.606353872397364], [-73.95745513145548, 40.606433506101666], [-73.95952506636407, 40.60780722763528], [-73.96038560659217, 40.60731587993212], [-73.96130814674456, 40.60682910275944], [-73.96198049980211, 40.606505743436266], [-73.96408707070293, 40.606167218233765], [-73.96505047162434, 40.60583366586483], [-73.96567882430097, 40.60564844382794], [-73.96595989098368, 40.60561638606314], [-73.9660047663237, 40.60561112982952], [-73.96602835608307, 40.60560836496997], [-73.96662459758153, 40.60589520523832], [-73.96665548615258, 40.606061273898995]]], "type": "Polygon"}, "id": "10", "properties": {"F_ALL_BIDs": 42.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Kings Highway", "F_ALL_BI_3": 225.0, "F_ALL_BI_4": "http://shopkingshighwaybid.org/", "F_ALL_BI_6": 400000.0, "F_ALL_BI_7": 494652.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 44, "Shape_Ar_1": 716981.661912, "Shape_Area": 115690.516666, "Shape_Le_1": 21843.5213166, "Shape_Leng": 0.0, "Year_Found": "1990"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_f1667928692adca400808693c477ba35.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#14 Kings Highway</b><br>
+    <b>Founded:</b> 1990<br>
+    <b>Properties:</b> 225<br>
+    <b>Assessment:</b> $400,000<br>
+    <b>Budget:</b> $494,652
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_f1667928692adca400808693c477ba35.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_338d826860fbc436a7b5e9d89322dd86_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_338d826860fbc436a7b5e9d89322dd86_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_338d826860fbc436a7b5e9d89322dd86 = L.geoJson(null, {
+                onEachFeature: geo_json_338d826860fbc436a7b5e9d89322dd86_onEachFeature,
+            
+                style: geo_json_338d826860fbc436a7b5e9d89322dd86_styler,
+            ...{
+}
+        });
+
+        function geo_json_338d826860fbc436a7b5e9d89322dd86_add (data) {
+            geo_json_338d826860fbc436a7b5e9d89322dd86
+                .addData(data);
+        }
+            geo_json_338d826860fbc436a7b5e9d89322dd86_add({"bbox": [-73.99857734614922, 40.68390921247277, -73.97821914217387, 40.69193633514831], "features": [{"bbox": [-73.99857734614922, 40.68390921247277, -73.97821914217387, 40.69193633514831], "geometry": {"coordinates": [[[-73.99837109924819, 40.69165839561557], [-73.99831827022466, 40.69172438607897], [-73.99802095930664, 40.69193633514831], [-73.99743269484787, 40.69177999064272], [-73.99736080806558, 40.691760130318436], [-73.9971582667151, 40.6917041729135], [-73.9963634831658, 40.69148458899305], [-73.99604180814066, 40.69139571499802], [-73.99419089237979, 40.69087792966732], [-73.9925641745543, 40.690190634452925], [-73.98694046216089, 40.688471220370175], [-73.98438008214147, 40.68748026671925], [-73.98415480263455, 40.687392770163804], [-73.98244386685282, 40.68672823603591], [-73.97845895821875, 40.685186056110396], [-73.97821914217387, 40.68486485073155], [-73.97841598730714, 40.684574364630144], [-73.97888471923925, 40.68390921247277], [-73.97931640195408, 40.68407739505865], [-73.97987604069797, 40.684295425718425], [-73.9800620449624, 40.6843678894569], [-73.9801237870702, 40.684391944109066], [-73.98118453302905, 40.68480233167739], [-73.98144179615339, 40.684902317994286], [-73.98248298399186, 40.68530696472429], [-73.98271268231169, 40.68539623307635], [-73.98290333356105, 40.68547032026137], [-73.98297105575372, 40.685496644928364], [-73.9852867149268, 40.686395810155645], [-73.98537483696124, 40.68643011655268], [-73.9870622548488, 40.687087002007445], [-73.9873124042144, 40.687184378041316], [-73.98754758405408, 40.68727719279379], [-73.98921914577859, 40.687928266356025], [-73.99432489586736, 40.68956165771911], [-73.99713591932579, 40.690211568046436], [-73.99803083179161, 40.69045870356134], [-73.99857734614922, 40.69072890287357], [-73.99844334266169, 40.69150921935629], [-73.99837109924819, 40.69165839561557]]], "type": "Polygon"}, "id": "11", "properties": {"F_ALL_BIDs": 5.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Atlantic Avenue", "F_ALL_BI_3": 374.0, "F_ALL_BI_4": "http://www.atlanticavebid.org/", "F_ALL_BI_6": 390000.0, "F_ALL_BI_7": 431322.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 7, "Shape_Ar_1": 1243708.95595, "Shape_Area": 201161.473968, "Shape_Le_1": 31623.7204685, "Shape_Leng": 0.0, "Year_Found": "2011"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_338d826860fbc436a7b5e9d89322dd86.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#6 Atlantic Avenue</b><br>
+    <b>Founded:</b> 2011<br>
+    <b>Properties:</b> 374<br>
+    <b>Assessment:</b> $390,000<br>
+    <b>Budget:</b> $431,322
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_338d826860fbc436a7b5e9d89322dd86.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_02a94d8a15ab75a0c1015252e8c098fb_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_02a94d8a15ab75a0c1015252e8c098fb_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_02a94d8a15ab75a0c1015252e8c098fb = L.geoJson(null, {
+                onEachFeature: geo_json_02a94d8a15ab75a0c1015252e8c098fb_onEachFeature,
+            
+                style: geo_json_02a94d8a15ab75a0c1015252e8c098fb_styler,
+            ...{
+}
+        });
+
+        function geo_json_02a94d8a15ab75a0c1015252e8c098fb_add (data) {
+            geo_json_02a94d8a15ab75a0c1015252e8c098fb
+                .addData(data);
+        }
+            geo_json_02a94d8a15ab75a0c1015252e8c098fb_add({"bbox": [-73.95258341315946, 40.63021329070613, -73.94554571567794, 40.63603620875973], "features": [{"bbox": [-73.95258341315946, 40.63021329070613, -73.94554571567794, 40.63603620875973], "geometry": {"coordinates": [[[-73.9514904347499, 40.63581002942586], [-73.95160255527715, 40.635915970217546], [-73.95119516749916, 40.63596127996989], [-73.95074292504242, 40.63600519493839], [-73.95041766753592, 40.63602259458357], [-73.9502786586356, 40.63603002781091], [-73.95016267445432, 40.63603620875973], [-73.94936544928406, 40.635311894738194], [-73.94891230581707, 40.634744731147684], [-73.94796533328564, 40.63434894664825], [-73.94725604150358, 40.63392326371419], [-73.94678690263464, 40.632804518383], [-73.9461246475392, 40.632159486697], [-73.94571390365533, 40.63166001651051], [-73.94554571567794, 40.63057017299816], [-73.9466807765653, 40.63044211170829], [-73.94731489822267, 40.63038223797211], [-73.94863316152907, 40.63061389107733], [-73.94957360241013, 40.63052957527584], [-73.9504923929945, 40.63043972556816], [-73.95141482894233, 40.630338891979676], [-73.95226882763853, 40.63021329070613], [-73.95253372105289, 40.631750455645665], [-73.95258341315946, 40.63203889894074], [-73.95200929896306, 40.63210467231021], [-73.95179271874133, 40.63212947731882], [-73.95143615584549, 40.632170306540594], [-73.95108348534978, 40.63221072465046], [-73.9508792982857, 40.63223410615492], [-73.9501641198436, 40.63231603168579], [-73.94984171358982, 40.63235294695407], [-73.94981991956274, 40.633787418157475], [-73.94986873940516, 40.63383349765248], [-73.9500453715462, 40.63400023790012], [-73.95025052609584, 40.634184941634786], [-73.95028289329385, 40.63421646554338], [-73.95032728444193, 40.63425968835509], [-73.9503761770479, 40.63430730342772], [-73.95041884073568, 40.634348823257945], [-73.95046139572732, 40.634390288525196], [-73.95046550012985, 40.634394269053224], [-73.95098979106565, 40.635332031607206], [-73.95102503916075, 40.635365917078744], [-73.95107285289008, 40.635411858461936], [-73.9510757688215, 40.63541465890017], [-73.95116898699851, 40.63550003335266], [-73.95129705621532, 40.63562278062355], [-73.95130155677488, 40.63562676175974], [-73.95136603874431, 40.63569011223905], [-73.95143055934126, 40.63575343402681], [-73.9514904347499, 40.63581002942586]]], "type": "Polygon"}, "id": "12", "properties": {"F_ALL_BIDs": 28.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Flatbush-Nostrand Junction", "F_ALL_BI_3": 250.0, "F_ALL_BI_4": "http://www.exploreflatbush.com/", "F_ALL_BI_6": 350000.0, "F_ALL_BI_7": 500588.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 30, "Shape_Ar_1": 1328591.05258, "Shape_Area": 214531.830968, "Shape_Le_1": 17528.9799687, "Shape_Leng": 0.0, "Year_Found": "2006"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_02a94d8a15ab75a0c1015252e8c098fb.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#15 Flatbush-Nostrand Junction</b><br>
+    <b>Founded:</b> 2006<br>
+    <b>Properties:</b> 250<br>
+    <b>Assessment:</b> $350,000<br>
+    <b>Budget:</b> $500,588
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_02a94d8a15ab75a0c1015252e8c098fb.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_1874b68bf930ef910961e9a7e1f957da_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#9ecae1", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_1874b68bf930ef910961e9a7e1f957da_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_1874b68bf930ef910961e9a7e1f957da = L.geoJson(null, {
+                onEachFeature: geo_json_1874b68bf930ef910961e9a7e1f957da_onEachFeature,
+            
+                style: geo_json_1874b68bf930ef910961e9a7e1f957da_styler,
+            ...{
+}
+        });
+
+        function geo_json_1874b68bf930ef910961e9a7e1f957da_add (data) {
+            geo_json_1874b68bf930ef910961e9a7e1f957da
+                .addData(data);
+        }
+            geo_json_1874b68bf930ef910961e9a7e1f957da_add({"bbox": [-74.01883854465028, 40.63681398937698, -74.000857733871, 40.65176701020393], "features": [{"bbox": [-74.01883854465028, 40.63681398937698, -74.000857733871, 40.65176701020393], "geometry": {"coordinates": [[[-74.01525521079601, 40.6409973989121], [-74.0125689372794, 40.64384041587786], [-74.01234963695897, 40.64405478015016], [-74.00926771035695, 40.64675349555926], [-74.00920995317576, 40.64680834085881], [-74.00889979634918, 40.64710277020226], [-74.00867971539279, 40.64731397167965], [-74.00821436561773, 40.64776436979131], [-74.00751793232068, 40.648433018440805], [-74.00743829936569, 40.64850965896661], [-74.00716754713905, 40.64876820652514], [-74.0059378595163, 40.649949247037725], [-74.00553592990198, 40.65034064663723], [-74.00540883535727, 40.65046372920381], [-74.00461375087235, 40.65122922798926], [-74.0043892834424, 40.651437209080306], [-74.00396286126187, 40.65176701020393], [-74.00373458767008, 40.651630959693996], [-74.00322127594369, 40.65129858235331], [-74.00327132557975, 40.651150280156685], [-74.00333655135421, 40.6510853911117], [-74.00337914766837, 40.651043065882945], [-74.00390182073832, 40.65066981320728], [-74.00393565847844, 40.65063728633253], [-74.00394643287196, 40.65062693838708], [-74.000857733871, 40.64752051184524], [-74.00245047561583, 40.645970782851904], [-74.0009921101594, 40.64738980309047], [-74.00398924388344, 40.6505854634402], [-74.00402880928182, 40.65054637593382], [-74.00448736779332, 40.65018734039662], [-74.00450015980297, 40.65017515423342], [-74.00453060999615, 40.65014616846764], [-74.00454343883675, 40.65013398093386], [-74.0045738881316, 40.650105021730745], [-74.00466040846987, 40.6500199569807], [-74.00649363550447, 40.648157697427095], [-74.00652984839022, 40.64812212337472], [-74.0065769075347, 40.648075596406024], [-74.00658822181568, 40.648064204572925], [-74.00662039857085, 40.64803178684319], [-74.0066259842953, 40.648026516907414], [-74.0066638186401, 40.64799074989935], [-74.00667271914796, 40.64798237811158], [-74.00675923319801, 40.647897312018934], [-74.00676157510597, 40.647894951039376], [-74.00680139203261, 40.64785547959256], [-74.00681951734012, 40.64783747233894], [-74.00685670220297, 40.647801870171214], [-74.00687381780408, 40.64778548301213], [-74.00691597663868, 40.64774628481326], [-74.00692091377948, 40.64774170052203], [-74.00729943509413, 40.6473933909341], [-74.00732822520065, 40.64736316961585], [-74.00736414882887, 40.647330146982505], [-74.00745008616053, 40.64724950012236], [-74.0074891458074, 40.64721164705366], [-74.00751155787542, 40.64718996248446], [-74.00765568627455, 40.64705622684641], [-74.00771722895635, 40.64699874606038], [-74.00775945785955, 40.64695886172423], [-74.00777516759722, 40.64694401133424], [-74.00781966654314, 40.64690138221761], [-74.0078294680612, 40.64689202199299], [-74.00788740670208, 40.64683728717926], [-74.00796703696213, 40.64676064677763], [-74.00797838717574, 40.646750078759744], [-74.00801409430998, 40.646716863615175], [-74.00802562508495, 40.64670596638322], [-74.00805754851521, 40.64667579996237], [-74.00807084447973, 40.646663226697164], [-74.00811548715609, 40.646621090871704], [-74.00836453698378, 40.64639150059303], [-74.00841779180875, 40.6463378634135], [-74.00842326704043, 40.64633234592602], [-74.00852829716514, 40.646222848753546], [-74.00943764286262, 40.645390558996006], [-74.00969979102545, 40.64509637838221], [-74.00974162107667, 40.64505616301231], [-74.00980618569109, 40.644994098750104], [-74.00999098082313, 40.644806449703594], [-74.01009960870054, 40.64469972281195], [-74.0101521035508, 40.64464852716045], [-74.01020715680299, 40.64459480678698], [-74.01021183972057, 40.6445902229609], [-74.01038196985559, 40.64442875961612], [-74.01043558131175, 40.644378085871544], [-74.01043990490321, 40.64437402346385], [-74.01179679486852, 40.64280771783054], [-74.01190325600946, 40.64270963557128], [-74.01202845151569, 40.64259425884783], [-74.0135465558368, 40.63875155390769], [-74.0136555645999, 40.638645290413805], [-74.01398727380676, 40.638321886711935], [-74.0175487408704, 40.63681398937698], [-74.01829925274757, 40.637072952398775], [-74.01841482100886, 40.637141306444], [-74.01883854465028, 40.637537200501434], [-74.01768455985315, 40.638655171227796], [-74.0173334506294, 40.638994562497906], [-74.01643733891268, 40.63985117791833], [-74.01631838939268, 40.63996644827313], [-74.01619943987261, 40.64008169116265], [-74.01608048945427, 40.64019698838552], [-74.01603726072618, 40.64023813918635], [-74.01525521079601, 40.6409973989121]]], "type": "Polygon"}, "id": "13", "properties": {"F_ALL_BIDs": 63.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Sunset Park", "F_ALL_BI_3": 640.0, "F_ALL_BI_4": "https://www.sunsetparkbid.org/", "F_ALL_BI_6": 300000.0, "F_ALL_BI_7": 366813.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 65, "Shape_Ar_1": 2143706.31024, "Shape_Area": 346291.227787, "Shape_Le_1": 34840.853396, "Shape_Leng": 0.0, "Year_Found": "1995"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_1874b68bf930ef910961e9a7e1f957da.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#16 Sunset Park</b><br>
+    <b>Founded:</b> 1995<br>
+    <b>Properties:</b> 640<br>
+    <b>Assessment:</b> $300,000<br>
+    <b>Budget:</b> $366,813
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_1874b68bf930ef910961e9a7e1f957da.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_6fe0e6d1875adac0eb2a8a99273c08b0 = L.geoJson(null, {
+                onEachFeature: geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_onEachFeature,
+            
+                style: geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_styler,
+            ...{
+}
+        });
+
+        function geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_add (data) {
+            geo_json_6fe0e6d1875adac0eb2a8a99273c08b0
+                .addData(data);
+        }
+            geo_json_6fe0e6d1875adac0eb2a8a99273c08b0_add({"bbox": [-74.02912991942962, 40.61968384591664, -74.0238629010861, 40.62374579575482], "features": [{"bbox": [-74.02912991942962, 40.61968384591664, -74.0238629010861, 40.62374579575482], "geometry": {"coordinates": [[[-74.02864840536935, 40.623478182544744], [-74.02853943074224, 40.62374579575482], [-74.02816824686684, 40.62365889330702], [-74.02754726486712, 40.62318368172783], [-74.02698227485907, 40.62248883018343], [-74.0260760337392, 40.62229845189217], [-74.02582372212872, 40.622146634474205], [-74.02527947601719, 40.62181417985861], [-74.02461457717989, 40.62106128183237], [-74.02454641840602, 40.6210203701331], [-74.02417293843675, 40.620796195040896], [-74.0238629010861, 40.61991404899095], [-74.02405931412972, 40.61968384591664], [-74.02421269607458, 40.61975979190152], [-74.02470254919565, 40.62000217888753], [-74.0249035607152, 40.62016820089876], [-74.02526017750995, 40.620382870285], [-74.02526602105087, 40.6203863886671], [-74.02531900458465, 40.62041828251928], [-74.02537405873515, 40.62045142278955], [-74.02542239618226, 40.620480519637425], [-74.02558893395448, 40.62058076739646], [-74.0265225197916, 40.620374455487166], [-74.0265607988025, 40.62032982519815], [-74.02675492653202, 40.62018227651671], [-74.02762273053752, 40.620608627985376], [-74.02775904628864, 40.62155814959366], [-74.02820983257628, 40.6218296624521], [-74.02824010490303, 40.62184789559289], [-74.028502612392, 40.62200600571373], [-74.02912991942962, 40.62229535839558], [-74.02881962336419, 40.62305771176362], [-74.02864840536935, 40.623478182544744]]], "type": "Polygon"}, "id": "14", "properties": {"F_ALL_BIDs": 7.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "86th Street Bay Ridge", "F_ALL_BI_3": 194.0, "F_ALL_BI_4": "https://86bid.org/", "F_ALL_BI_6": 290000.0, "F_ALL_BI_7": 348667.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 9, "Shape_Ar_1": 472513.355914, "Shape_Area": 76274.5122919, "Shape_Le_1": 9920.02405707, "Shape_Leng": 0.0, "Year_Found": "2001"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_6fe0e6d1875adac0eb2a8a99273c08b0.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#17 86th Street Bay Ridge</b><br>
+    <b>Founded:</b> 2001<br>
+    <b>Properties:</b> 194<br>
+    <b>Assessment:</b> $290,000<br>
+    <b>Budget:</b> $348,667
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_6fe0e6d1875adac0eb2a8a99273c08b0.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_52cef167591d566031d8d6a1fd45c44f_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_52cef167591d566031d8d6a1fd45c44f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_52cef167591d566031d8d6a1fd45c44f = L.geoJson(null, {
+                onEachFeature: geo_json_52cef167591d566031d8d6a1fd45c44f_onEachFeature,
+            
+                style: geo_json_52cef167591d566031d8d6a1fd45c44f_styler,
+            ...{
+}
+        });
+
+        function geo_json_52cef167591d566031d8d6a1fd45c44f_add (data) {
+            geo_json_52cef167591d566031d8d6a1fd45c44f
+                .addData(data);
+        }
+            geo_json_52cef167591d566031d8d6a1fd45c44f_add({"bbox": [-73.95101113683343, 40.71056361444331, -73.94068383842588, 40.7122907179031], "features": [{"bbox": [-73.95101113683343, 40.71056361444331, -73.94068383842588, 40.7122907179031], "geometry": {"coordinates": [[[-73.95094109429242, 40.71083943366562], [-73.95101113683343, 40.711289001024], [-73.95084106419058, 40.71138727319453], [-73.95051941252163, 40.711495993351235], [-73.94980131365655, 40.71154849205294], [-73.94971831022261, 40.71155372496579], [-73.94760225670565, 40.711686863476466], [-73.94695008250432, 40.711749500979664], [-73.94518966661845, 40.71202749015044], [-73.94510662455696, 40.71203546509296], [-73.94492618266078, 40.71205132577454], [-73.94489011081055, 40.71205394391353], [-73.94313539922672, 40.71217948713349], [-73.941248492464, 40.7122907179031], [-73.94101407170074, 40.71228442213507], [-73.94090780100261, 40.712085563807], [-73.94088918341835, 40.71205069660404], [-73.94068383842588, 40.711636954440415], [-73.94108121537833, 40.71153123875841], [-73.94116425833813, 40.71152329371624], [-73.94125447883705, 40.71151535275872], [-73.94335087452065, 40.711260645804586], [-73.94368650307712, 40.71122883417844], [-73.94506006038421, 40.71115462174497], [-73.9460201465222, 40.711070345077296], [-73.94799769150046, 40.71082211209414], [-73.94806987472678, 40.71081413019696], [-73.94830085134929, 40.710790190628174], [-73.95035038641609, 40.710572993650224], [-73.95043310328745, 40.71056361444331], [-73.9508883263543, 40.71059032413873], [-73.95094109429242, 40.71083943366562]]], "type": "Polygon"}, "id": "15", "properties": {"F_ALL_BIDs": 37.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Grand Street", "F_ALL_BI_3": 212.0, "F_ALL_BI_4": "https://www.grandstreetbk.org/", "F_ALL_BI_6": 271752.0, "F_ALL_BI_7": 460680.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 39, "Shape_Ar_1": 474428.986185, "Shape_Area": 76789.5069787, "Shape_Le_1": 12686.4893797, "Shape_Leng": 0.0, "Year_Found": "1985"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_52cef167591d566031d8d6a1fd45c44f.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#18 Grand Street</b><br>
+    <b>Founded:</b> 1985<br>
+    <b>Properties:</b> 212<br>
+    <b>Assessment:</b> $271,752<br>
+    <b>Budget:</b> $460,680
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_52cef167591d566031d8d6a1fd45c44f.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_0fb161454f6eb2801f8dc29ee83201a1_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_0fb161454f6eb2801f8dc29ee83201a1_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_0fb161454f6eb2801f8dc29ee83201a1 = L.geoJson(null, {
+                onEachFeature: geo_json_0fb161454f6eb2801f8dc29ee83201a1_onEachFeature,
+            
+                style: geo_json_0fb161454f6eb2801f8dc29ee83201a1_styler,
+            ...{
+}
+        });
+
+        function geo_json_0fb161454f6eb2801f8dc29ee83201a1_add (data) {
+            geo_json_0fb161454f6eb2801f8dc29ee83201a1
+                .addData(data);
+        }
+            geo_json_0fb161454f6eb2801f8dc29ee83201a1_add({"bbox": [-73.94404111752709, 40.7007344110421, -73.94057268807913, 40.70587344644158], "features": [{"bbox": [-73.94404111752709, 40.7007344110421, -73.94057268807913, 40.70587344644158], "geometry": {"coordinates": [[[-73.94340851492088, 40.70549582974559], [-73.94335723010128, 40.70578588891666], [-73.94281329840013, 40.705838871532904], [-73.94244630696215, 40.70587344644158], [-73.94243476361078, 40.70579890321025], [-73.9424130369573, 40.70565856988925], [-73.94240269375513, 40.70559176719118], [-73.94239172083394, 40.70552089144174], [-73.94235937160222, 40.705311945169356], [-73.94229806068577, 40.70495105320479], [-73.94145080204915, 40.70424181901243], [-73.94108135461718, 40.70421181617583], [-73.9410469320738, 40.703997643867275], [-73.94115957721718, 40.70355201185795], [-73.94124906558915, 40.70354361435582], [-73.94189144815388, 40.70303822252301], [-73.94169315852965, 40.702341595430276], [-73.94155574773221, 40.7020687824576], [-73.94061006248653, 40.70137552517562], [-73.94057268807913, 40.70113728901865], [-73.94101085124042, 40.70103905484255], [-73.94188634662137, 40.700842770616234], [-73.94222751239326, 40.70078236754758], [-73.94246698348506, 40.70075527866758], [-73.94265146600338, 40.7007344110421], [-73.94304493348771, 40.70095293884026], [-73.94375751220537, 40.70136440804753], [-73.94380699949608, 40.701404440323984], [-73.94385373973863, 40.701446250061835], [-73.94404111752709, 40.701618630505564], [-73.94395132372793, 40.702126492280094], [-73.94359628347651, 40.70288142804098], [-73.94322061431289, 40.70379353680386], [-73.94326711919683, 40.704069970410124], [-73.9433067789183, 40.70485679348649], [-73.94331897803987, 40.7049280703667], [-73.94333009648815, 40.704993029602505], [-73.94334247886601, 40.70506538026114], [-73.94338635617775, 40.70536050309725], [-73.94339809446357, 40.70543218803123], [-73.94340851492088, 40.70549582974559]]], "type": "Polygon"}, "id": "16", "properties": {"F_ALL_BIDs": 35.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Graham Avenue", "F_ALL_BI_3": 140.0, "F_ALL_BI_4": "http://grahamavenuebid.net/", "F_ALL_BI_6": 250000.0, "F_ALL_BI_7": 356551.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 37, "Shape_Ar_1": 528245.173789, "Shape_Area": 85478.0679235, "Shape_Le_1": 12834.0576651, "Shape_Leng": 0.0, "Year_Found": "1987"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_0fb161454f6eb2801f8dc29ee83201a1.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#19 Graham Avenue</b><br>
+    <b>Founded:</b> 1987<br>
+    <b>Properties:</b> 140<br>
+    <b>Assessment:</b> $250,000<br>
+    <b>Budget:</b> $356,551
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_0fb161454f6eb2801f8dc29ee83201a1.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_0048e1da5f5aea6c37fa660211efa11f_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_0048e1da5f5aea6c37fa660211efa11f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_0048e1da5f5aea6c37fa660211efa11f = L.geoJson(null, {
+                onEachFeature: geo_json_0048e1da5f5aea6c37fa660211efa11f_onEachFeature,
+            
+                style: geo_json_0048e1da5f5aea6c37fa660211efa11f_styler,
+            ...{
+}
+        });
+
+        function geo_json_0048e1da5f5aea6c37fa660211efa11f_add (data) {
+            geo_json_0048e1da5f5aea6c37fa660211efa11f
+                .addData(data);
+        }
+            geo_json_0048e1da5f5aea6c37fa660211efa11f_add({"bbox": [-73.91979656627404, 40.6660392306338, -73.90709874768068, 40.67095332556122], "features": [{"bbox": [-73.91979656627404, 40.6660392306338, -73.90709874768068, 40.67095332556122], "geometry": {"coordinates": [[[-73.91969345854406, 40.66783669410116], [-73.91979656627404, 40.66824587468215], [-73.91823961880003, 40.66897222831657], [-73.91821689681325, 40.66898201061276], [-73.91816175103457, 40.66900571378418], [-73.91799360797296, 40.669077974064415], [-73.91760386759873, 40.66924545615851], [-73.91759986380751, 40.669247155465335], [-73.91562429961446, 40.669328972199956], [-73.91506502019666, 40.669409285080796], [-73.91492790225, 40.66943072940495], [-73.91450121686312, 40.66950408348132], [-73.91441461208319, 40.66951749527879], [-73.91431722931651, 40.669530873005755], [-73.91422701959735, 40.66954428275378], [-73.91413680987822, 40.66955766456355], [-73.91395278909394, 40.669581708207595], [-73.91380186224477, 40.66960517337323], [-73.91379764375615, 40.669605828836055], [-73.91350022683696, 40.669648698954425], [-73.91349975881471, 40.669648780716905], [-73.91262209669726, 40.66992234782502], [-73.91150490779248, 40.670777097277394], [-73.91089933998472, 40.67090019937366], [-73.91064001792178, 40.67094487421254], [-73.91056433935066, 40.67095332556122], [-73.90841679628973, 40.670432680556964], [-73.9076577989264, 40.670688902902995], [-73.90733304267982, 40.67073711473382], [-73.90715143656703, 40.670109264649014], [-73.90709874768068, 40.66989221983613], [-73.90724700473685, 40.66982138718948], [-73.90732636190906, 40.669810718577274], [-73.90747068973418, 40.669792033171376], [-73.90752841277939, 40.66978400956483], [-73.90761497983007, 40.66977334707884], [-73.90798671976262, 40.66971287632656], [-73.90816714189587, 40.66968609300738], [-73.9082392891896, 40.66967539234987], [-73.90832950070536, 40.66966198739777], [-73.91005277933907, 40.668914818194594], [-73.91054694527182, 40.6684137056816], [-73.9105570414373, 40.66841228571381], [-73.91090413519173, 40.66836284642288], [-73.91126798522114, 40.66839988075399], [-73.91346896456675, 40.66834959928407], [-73.91348901047232, 40.668346539945496], [-73.91382255044573, 40.66829598384422], [-73.91520488339482, 40.668589851633975], [-73.91579527236921, 40.66855970873439], [-73.91592877998676, 40.66854097732647], [-73.91614164477647, 40.668508799847345], [-73.91635807497956, 40.66847945070236], [-73.91643021868003, 40.66846874303754], [-73.91650239921142, 40.66845800811645], [-73.91657093976929, 40.66844727114945], [-73.9166467243416, 40.668436566204925], [-73.9167188698387, 40.66842585921471], [-73.91696421591247, 40.668391040702666], [-73.91706884538857, 40.66837494886276], [-73.91737103595518, 40.66834242176216], [-73.91775501992508, 40.66614377224715], [-73.91845859033705, 40.6660392306338], [-73.91948359412739, 40.66702928064605], [-73.91951915303959, 40.667163853868054], [-73.91969345854406, 40.66783669410116]]], "type": "Polygon"}, "id": "17", "properties": {"F_ALL_BIDs": 57.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Pitkin Avenue", "F_ALL_BI_3": 208.0, "F_ALL_BI_4": "https://www.pitkinavenue.nyc/", "F_ALL_BI_6": 225000.0, "F_ALL_BI_7": 856260.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 59, "Shape_Ar_1": 803782.294426, "Shape_Area": 129932.07424, "Shape_Le_1": 20569.9195824, "Shape_Leng": 0.0, "Year_Found": "1993"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_0048e1da5f5aea6c37fa660211efa11f.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#20 Pitkin Avenue</b><br>
+    <b>Founded:</b> 1993<br>
+    <b>Properties:</b> 208<br>
+    <b>Assessment:</b> $225,000<br>
+    <b>Budget:</b> $856,260
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_0048e1da5f5aea6c37fa660211efa11f.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_167db15e2dbe4c00c38c773a5f1d28cd_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_167db15e2dbe4c00c38c773a5f1d28cd_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_167db15e2dbe4c00c38c773a5f1d28cd = L.geoJson(null, {
+                onEachFeature: geo_json_167db15e2dbe4c00c38c773a5f1d28cd_onEachFeature,
+            
+                style: geo_json_167db15e2dbe4c00c38c773a5f1d28cd_styler,
+            ...{
+}
+        });
+
+        function geo_json_167db15e2dbe4c00c38c773a5f1d28cd_add (data) {
+            geo_json_167db15e2dbe4c00c38c773a5f1d28cd
+                .addData(data);
+        }
+            geo_json_167db15e2dbe4c00c38c773a5f1d28cd_add({"bbox": [-73.96821704557728, 40.57498059423514, -73.95594284013254, 40.57900845700566], "features": [{"bbox": [-73.96821704557728, 40.57498059423514, -73.95594284013254, 40.57900845700566], "geometry": {"coordinates": [[[-73.96803065593562, 40.57677523408896], [-73.96801945035074, 40.57682225627461], [-73.96535292090576, 40.57723250923355], [-73.96499116395096, 40.57730699967856], [-73.96465332374228, 40.57737981978066], [-73.96458861809239, 40.57739382185285], [-73.96424087934757, 40.57746776287092], [-73.96403544811682, 40.57751102444538], [-73.96334147530531, 40.577664955349384], [-73.96300268557738, 40.5777379886193], [-73.96017474863879, 40.57881468262211], [-73.95949692933273, 40.578955782987265], [-73.95920885848572, 40.57896856686063], [-73.95824857382006, 40.57900845700566], [-73.95647832856834, 40.578471602133625], [-73.95616067440241, 40.57833829245362], [-73.95594284013254, 40.578050880227444], [-73.95603559118561, 40.57792152835726], [-73.95917698536114, 40.57756952775544], [-73.95978576734099, 40.577415456761265], [-73.96144274222189, 40.57712289467625], [-73.96326391835696, 40.576735878902], [-73.96329930389433, 40.57673262090829], [-73.96336654369165, 40.57672641877948], [-73.96343729141016, 40.57671990483788], [-73.96349442066897, 40.57671464565003], [-73.96420950478795, 40.576596099570935], [-73.96684627394588, 40.57498059423514], [-73.96695423527336, 40.57499173788825], [-73.96757464414792, 40.57505578792955], [-73.96821704557728, 40.57598603876497], [-73.96810049006747, 40.576482141100236], [-73.96803065593562, 40.57677523408896]]], "type": "Polygon"}, "id": "18", "properties": {"F_ALL_BIDs": 11.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Brighton Beach", "F_ALL_BI_3": 125.0, "F_ALL_BI_4": "https://bidbrightonbeach.com/", "F_ALL_BI_6": 220000.0, "F_ALL_BI_7": 312952.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 13, "Shape_Ar_1": 561384.55408, "Shape_Area": 90500.2734303, "Shape_Le_1": 16378.7971144, "Shape_Leng": 0.0, "Year_Found": "1987"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_167db15e2dbe4c00c38c773a5f1d28cd.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#21 Brighton Beach</b><br>
+    <b>Founded:</b> 1987<br>
+    <b>Properties:</b> 125<br>
+    <b>Assessment:</b> $220,000<br>
+    <b>Budget:</b> $312,952
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_167db15e2dbe4c00c38c773a5f1d28cd.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_8d93843b928757e8fe3329593cdb6d83_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#fdae6b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_8d93843b928757e8fe3329593cdb6d83_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_8d93843b928757e8fe3329593cdb6d83 = L.geoJson(null, {
+                onEachFeature: geo_json_8d93843b928757e8fe3329593cdb6d83_onEachFeature,
+            
+                style: geo_json_8d93843b928757e8fe3329593cdb6d83_styler,
+            ...{
+}
+        });
+
+        function geo_json_8d93843b928757e8fe3329593cdb6d83_add (data) {
+            geo_json_8d93843b928757e8fe3329593cdb6d83
+                .addData(data);
+        }
+            geo_json_8d93843b928757e8fe3329593cdb6d83_add({"bbox": [-73.99645032060937, 40.69340347959429, -73.99067012528677, 40.695497247602184], "features": [{"bbox": [-73.99645032060937, 40.69340347959429, -73.99067012528677, 40.695497247602184], "geometry": {"coordinates": [[[-73.99636632094378, 40.695191060982765], [-73.99632640879571, 40.69527404323764], [-73.99542005448812, 40.695497247602184], [-73.99533001994045, 40.695472282254734], [-73.9950707284202, 40.6954001575143], [-73.99504629783775, 40.695393106182], [-73.99498431408314, 40.69537520030353], [-73.99495711489297, 40.695367347324485], [-73.99489788806797, 40.69535023491031], [-73.9947009360352, 40.69529533893711], [-73.99464581540936, 40.695280874589876], [-73.99461402492976, 40.69527135428647], [-73.99458099297846, 40.69526147504621], [-73.99435052390413, 40.695197662134106], [-73.99401719683141, 40.695106054414], [-73.99275175176876, 40.695041945758085], [-73.99203919910225, 40.694848414560724], [-73.99083648070095, 40.6945099844276], [-73.99067012528677, 40.693897380028766], [-73.9911535410805, 40.69355565530573], [-73.99167359286645, 40.69340347959429], [-73.99244781308059, 40.69361986415263], [-73.99254524974619, 40.69364701995845], [-73.99261706196833, 40.69366703433194], [-73.99373305252051, 40.69426564487931], [-73.99376665220709, 40.69427576742078], [-73.9939286993012, 40.69432016368952], [-73.99397544313702, 40.69433325037687], [-73.99400793070926, 40.694342347169126], [-73.9940641742292, 40.69435810853714], [-73.99408715043921, 40.694364548349974], [-73.99416996612526, 40.694389487549586], [-73.99454588232557, 40.694481349624134], [-73.99578615479733, 40.69453165088945], [-73.99604901622249, 40.69460651867398], [-73.99645032060937, 40.69501638223893], [-73.99636632094378, 40.695191060982765]]], "type": "Polygon"}, "id": "19", "properties": {"F_ALL_BIDs": 49.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Montague Street", "F_ALL_BI_3": 100.0, "F_ALL_BI_4": "https://montaguebid.com/", "F_ALL_BI_6": 210000.0, "F_ALL_BI_7": 213765.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 51, "Shape_Ar_1": 319633.000597, "Shape_Area": 51708.5724352, "Shape_Le_1": 7749.62867339, "Shape_Leng": 0.0, "Year_Found": "1998"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_8d93843b928757e8fe3329593cdb6d83.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#2 Montague Street</b><br>
+    <b>Founded:</b> 1998<br>
+    <b>Properties:</b> 100<br>
+    <b>Assessment:</b> $210,000<br>
+    <b>Budget:</b> $213,765
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_8d93843b928757e8fe3329593cdb6d83.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_9b16b49f21675ecad7907073f28af4ab_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#a1d99b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_9b16b49f21675ecad7907073f28af4ab_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_9b16b49f21675ecad7907073f28af4ab = L.geoJson(null, {
+                onEachFeature: geo_json_9b16b49f21675ecad7907073f28af4ab_onEachFeature,
+            
+                style: geo_json_9b16b49f21675ecad7907073f28af4ab_styler,
+            ...{
+}
+        });
+
+        function geo_json_9b16b49f21675ecad7907073f28af4ab_add (data) {
+            geo_json_9b16b49f21675ecad7907073f28af4ab
+                .addData(data);
+        }
+            geo_json_9b16b49f21675ecad7907073f28af4ab_add({"bbox": [-73.97851152044267, 40.6755845825326, -73.97082789115274, 40.68420286158394], "features": [{"bbox": [-73.97851152044267, 40.6755845825326, -73.97082789115274, 40.68420286158394], "geometry": {"coordinates": [[[-73.97851152044267, 40.68376120757689], [-73.97820816026955, 40.68420286158394], [-73.977657113013, 40.68398869851671], [-73.97758399464045, 40.683960281265506], [-73.9770174182076, 40.68374332105247], [-73.97449234287716, 40.68305385070002], [-73.97404354995109, 40.682386233687915], [-73.97381750777448, 40.6802187891567], [-73.97316286949435, 40.67917946895908], [-73.97139544764755, 40.67687581144646], [-73.97091788527621, 40.67611550405107], [-73.97082789115274, 40.67587546617085], [-73.97119427982115, 40.67571947709151], [-73.97167355707637, 40.6755845825326], [-73.97239916406059, 40.67586972221253], [-73.97406830841865, 40.67813876661657], [-73.97573849033085, 40.68058476024234], [-73.97744341279007, 40.682545712736584], [-73.97851152044267, 40.68376120757689]]], "type": "Polygon"}, "id": "20", "properties": {"F_ALL_BIDs": 55.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "North Flatbush", "F_ALL_BI_3": 192.0, "F_ALL_BI_4": "https://northflatbushbid.nyc/", "F_ALL_BI_6": 200000.0, "F_ALL_BI_7": 327295.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 57, "Shape_Ar_1": 729647.991113, "Shape_Area": 117990.326866, "Shape_Le_1": 16499.2793164, "Shape_Leng": 0.0, "Year_Found": "1986"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_9b16b49f21675ecad7907073f28af4ab.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#10 North Flatbush</b><br>
+    <b>Founded:</b> 1986<br>
+    <b>Properties:</b> 192<br>
+    <b>Assessment:</b> $200,000<br>
+    <b>Budget:</b> $327,295
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_9b16b49f21675ecad7907073f28af4ab.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_92a3c889648131f4d04b36d4dbc21a4b_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#fdae6b", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_92a3c889648131f4d04b36d4dbc21a4b_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_92a3c889648131f4d04b36d4dbc21a4b = L.geoJson(null, {
+                onEachFeature: geo_json_92a3c889648131f4d04b36d4dbc21a4b_onEachFeature,
+            
+                style: geo_json_92a3c889648131f4d04b36d4dbc21a4b_styler,
+            ...{
+}
+        });
+
+        function geo_json_92a3c889648131f4d04b36d4dbc21a4b_add (data) {
+            geo_json_92a3c889648131f4d04b36d4dbc21a4b
+                .addData(data);
+        }
+            geo_json_92a3c889648131f4d04b36d4dbc21a4b_add({"bbox": [-73.90510883020602, 40.66828368174927, -73.89637667743499, 40.67551960143469], "features": [{"bbox": [-73.90510883020602, 40.66828368174927, -73.89637667743499, 40.67551960143469], "geometry": {"coordinates": [[[-73.90485579994332, 40.673676449806145], [-73.90510883020602, 40.674695744437834], [-73.90428475349361, 40.67507197213517], [-73.90354725730663, 40.67539039119883], [-73.90329875006134, 40.67546805880712], [-73.90206765208359, 40.67544260496168], [-73.90171071818355, 40.675437897215325], [-73.90010644207045, 40.67543738896949], [-73.8997854362902, 40.675444133786954], [-73.89816917215965, 40.675507992867196], [-73.89799237922017, 40.67551755278397], [-73.89790583193245, 40.67551960143469], [-73.8978271368186, 40.675214265935836], [-73.89771024084733, 40.674737581836645], [-73.89732296545024, 40.67323237619035], [-73.89728779730517, 40.67309774435754], [-73.8969619469106, 40.67185253571747], [-73.89660228213206, 40.67038057052337], [-73.89637667743499, 40.66950088792465], [-73.89639161911312, 40.66949845139772], [-73.8964416831222, 40.66949028467132], [-73.89658247697501, 40.66946914084417], [-73.89665467187943, 40.66945856143324], [-73.89815475060608, 40.66904386927689], [-73.89865267958156, 40.66897162871907], [-73.89886195111015, 40.66894222186207], [-73.89976643153204, 40.66882275803291], [-73.90060656563017, 40.66870971720349], [-73.90176022433886, 40.66851987884984], [-73.90256781337254, 40.668399643638395], [-73.90287439310765, 40.6683593169417], [-73.90322025617012, 40.668314510229386], [-73.90347244291479, 40.66828368174927], [-73.9035163884985, 40.66844811740622], [-73.90354207762068, 40.66854426014388], [-73.90360809211596, 40.66879936890457], [-73.90387587990216, 40.669844452317214], [-73.90406285973695, 40.67056862322692], [-73.9044393239096, 40.67203775879657], [-73.90475384834508, 40.673269826145585], [-73.90485579994332, 40.673676449806145]]], "type": "Polygon"}, "id": "21", "properties": {"F_ALL_BIDs": 25.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "East Brooklyn", "F_ALL_BI_3": 70.0, "F_ALL_BI_4": "http://www.eastbrooklynbid.com/", "F_ALL_BI_6": 142500.0, "F_ALL_BI_7": 236634.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 27, "Shape_Ar_1": 3462022.52003, "Shape_Area": 559693.428377, "Shape_Le_1": 50139.799792, "Shape_Leng": 0.0, "Year_Found": "1985"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_92a3c889648131f4d04b36d4dbc21a4b.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#22 East Brooklyn</b><br>
+    <b>Founded:</b> 1985<br>
+    <b>Properties:</b> 70<br>
+    <b>Assessment:</b> $142,500<br>
+    <b>Budget:</b> $236,634
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_92a3c889648131f4d04b36d4dbc21a4b.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+        function geo_json_2de3458913afb557932de4d469a5fc0b_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#333333", "fillColor": "#999999", "fillOpacity": 0.6, "weight": 1.5};
+            }
+        }
+
+        function geo_json_2de3458913afb557932de4d469a5fc0b_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_2de3458913afb557932de4d469a5fc0b = L.geoJson(null, {
+                onEachFeature: geo_json_2de3458913afb557932de4d469a5fc0b_onEachFeature,
+            
+                style: geo_json_2de3458913afb557932de4d469a5fc0b_styler,
+            ...{
+}
+        });
+
+        function geo_json_2de3458913afb557932de4d469a5fc0b_add (data) {
+            geo_json_2de3458913afb557932de4d469a5fc0b
+                .addData(data);
+        }
+            geo_json_2de3458913afb557932de4d469a5fc0b_add({"bbox": [-73.8920449852878, 40.67754505796938, -73.86663185772044, 40.68556310877884], "features": [{"bbox": [-73.8920449852878, 40.67754505796938, -73.86663185772044, 40.68556310877884], "geometry": {"coordinates": [[[-73.8920449852878, 40.677610727688126], [-73.89166202973, 40.678396901169826], [-73.88610020112928, 40.67991857307221], [-73.88521168068903, 40.680191976193946], [-73.88245764357556, 40.681091948628264], [-73.88023607777185, 40.68185548276184], [-73.87734455773236, 40.68261532792129], [-73.87288619472663, 40.684309795915134], [-73.86725183840187, 40.6854912985056], [-73.86675052886525, 40.68556310877884], [-73.86668185469274, 40.685304381579215], [-73.86666032776034, 40.68512780784464], [-73.86663185772044, 40.68485268924506], [-73.86667589646083, 40.68461966541071], [-73.8706420488431, 40.68362952337323], [-73.87402820058564, 40.68231626988437], [-73.87912964452735, 40.681245750572074], [-73.88055005257436, 40.680800242517066], [-73.88308627227683, 40.679901056328774], [-73.88327413272573, 40.67983978239685], [-73.88337975377921, 40.679805330426404], [-73.8866981689162, 40.6788927247473], [-73.88934210382254, 40.67801030034144], [-73.89166191549769, 40.67759930570015], [-73.89202809329447, 40.67754505796938], [-73.8920449852878, 40.677610727688126]]], "type": "Polygon"}, "id": "22", "properties": {"F_ALL_BIDs": 0.0, "F_ALL_BI_1": "Brooklyn", "F_ALL_BI_2": "Cypress Hills Fulton", "F_ALL_BI_3": 0.0, "F_ALL_BI_4": "https://cypresshillsfultonbid.org/", "F_ALL_BI_6": 0.0, "F_ALL_BI_7": 0.0, "Id": 0, "OBJECTID_1": 0, "OBJECTID_2": 0, "Shape_Ar_1": 0.0, "Shape_Area": 0.0, "Shape_Le_1": 0.0, "Shape_Leng": 0.0, "Year_Found": "2023"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_2de3458913afb557932de4d469a5fc0b.bindTooltip(
+                `<div>
+                     
+    <b style="font-size: 14px;">#23 Cypress Hills Fulton</b><br>
+    <b>Founded:</b> 2023<br>
+    <b>Properties:</b> N/A<br>
+    <b>Assessment:</b> N/A<br>
+    <b>Budget:</b> N/A
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_2de3458913afb557932de4d469a5fc0b.addTo(feature_group_201b68f74669330f64a3db82db59ce4e);
+        
+    
+            feature_group_201b68f74669330f64a3db82db59ce4e.addTo(map_29f97117fe7e75d51837f7bfe7ce10e0);
+        
+    
+            var feature_group_9f22e55fcd48d640bff2476d0467cad9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+        function geo_json_22cf19ea71d889d421347f1b2ee2364c_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#cc0000", "fillColor": "#1e7e34", "fillOpacity": 0.7, "weight": 3};
+            }
+        }
+
+        function geo_json_22cf19ea71d889d421347f1b2ee2364c_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_22cf19ea71d889d421347f1b2ee2364c = L.geoJson(null, {
+                onEachFeature: geo_json_22cf19ea71d889d421347f1b2ee2364c_onEachFeature,
+            
+                style: geo_json_22cf19ea71d889d421347f1b2ee2364c_styler,
+            ...{
+}
+        });
+
+        function geo_json_22cf19ea71d889d421347f1b2ee2364c_add (data) {
+            geo_json_22cf19ea71d889d421347f1b2ee2364c
+                .addData(data);
+        }
+            geo_json_22cf19ea71d889d421347f1b2ee2364c_add({"bbox": [-73.99776488304373, 40.67397312303486, -73.97982727586435, 40.6852235692749], "features": [{"bbox": [-73.99776488304373, 40.67397312303486, -73.97982727586435, 40.6852235692749], "geometry": {"coordinates": [[[-73.98871236113611, 40.6852235692749], [-73.98656632686861, 40.684387901353176], [-73.98699969227908, 40.683765500363144], [-73.98645689115888, 40.68355803207488], [-73.98666481900734, 40.68325429733605], [-73.98500577364807, 40.68259869031278], [-73.98436666910332, 40.6835430943332], [-73.9820772740561, 40.68265014324907], [-73.98185949699375, 40.6829862461299], [-73.97982727586435, 40.68216797788509], [-73.98387639712381, 40.67614435139574], [-73.98570616219023, 40.67397312303486], [-73.98800431209425, 40.67508032553716], [-73.98874190877774, 40.674180621155706], [-73.9903232547831, 40.674983217807416], [-73.99044582277797, 40.67536168816061], [-73.99097986904138, 40.67549199434205], [-73.99192101614494, 40.674349109154754], [-73.99482325116658, 40.67583311313964], [-73.99534854257324, 40.675454645462594], [-73.99649542881106, 40.67406691226546], [-73.99776488304373, 40.674704343540796], [-73.99649105138268, 40.67744655650161], [-73.99458577567648, 40.67657344282233], [-73.9937551586398, 40.67783165243714], [-73.991865203933, 40.67694775436462], [-73.99042393563609, 40.67867819171676], [-73.98827461829725, 40.68186174712512], [-73.99042393563607, 40.68269744671996], [-73.98871236113611, 40.6852235692749]]], "type": "Polygon"}, "id": "0", "properties": {"id": null}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_22cf19ea71d889d421347f1b2ee2364c.bindTooltip(
+                `<div>
+                     <b style="font-size: 14px;">Gowanus BID</b><br><b>Status:</b> Proposed<br><b>Borough:</b> Brooklyn
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_22cf19ea71d889d421347f1b2ee2364c.addTo(feature_group_9f22e55fcd48d640bff2476d0467cad9);
+        
+    
+            feature_group_9f22e55fcd48d640bff2476d0467cad9.addTo(map_29f97117fe7e75d51837f7bfe7ce10e0);
+        
+    
+            var feature_group_74831bdefbdb9dab3f3b2d9cec57a726 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_b17c91a962d60cf730a1087c1e99bbba = L.marker(
+                [40.690657600854294, -73.98194655723844],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_e81139b3b300660390499c6f60c75e21 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e5\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+
+
+                marker_b17c91a962d60cf730a1087c1e99bbba.setIcon(div_icon_e81139b3b300660390499c6f60c75e21);
+
+
+            var marker_495d903ee88303fc2d1d6c12478ec1f3 = L.marker(
+                [40.69047111524694, -73.98462230935331],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+
+
+            var div_icon_7dd74575b2a78bd255fe869cb4a61016 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e4\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_495d903ee88303fc2d1d6c12478ec1f3.setIcon(div_icon_7dd74575b2a78bd255fe869cb4a61016);
+            
+    
+            var marker_066686dec3a9373fb49ac89c08088caa = L.marker(
+                [40.703089878818496, -73.98838767534554],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_87f00ce49b8aa5cd315d1e5e4f6390d1 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e1\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_066686dec3a9373fb49ac89c08088caa.setIcon(div_icon_87f00ce49b8aa5cd315d1e5e4f6390d1);
+            
+    
+            var marker_280ea7c66a278cb5f3642b1d7d4ee704 = L.marker(
+                [40.690128046214156, -73.98745717731519],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_d36e7b7d548d833163d1a980d127f96f = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e3\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_280ea7c66a278cb5f3642b1d7d4ee704.setIcon(div_icon_d36e7b7d548d833163d1a980d127f96f);
+            
+    
+            var marker_b09ed052cb180303fbe293456a0ac5e5 = L.marker(
+                [40.649562014945474, -73.95978469830976],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_03a65d34a90916ec7bc758df015fb1b0 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e12\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_b09ed052cb180303fbe293456a0ac5e5.setIcon(div_icon_03a65d34a90916ec7bc758df015fb1b0);
+            
+    
+            var marker_c456535cb899008a2778b8e48c033631 = L.marker(
+                [40.68029989612294, -73.94788166839724],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_2e07a71b43d736d7064bce5c5322bbfa = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e9\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_c456535cb899008a2778b8e48c033631.setIcon(div_icon_2e07a71b43d736d7064bce5c5322bbfa);
+            
+    
+            var marker_9355c552b2847d921dcc9097f3d999c4 = L.marker(
+                [40.693746329560646, -73.97428540631856],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_f1251ea7f21e2f87615eb670ed1034b4 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e7\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_9355c552b2847d921dcc9097f3d999c4.setIcon(div_icon_f1251ea7f21e2f87615eb670ed1034b4);
+            
+    
+            var marker_392c2cefdc4491ac4426c7239a313773 = L.marker(
+                [40.63143272830592, -74.02180451259659],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_4ba40f1afc9e54911e3bfae88d8cd5ac = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e13\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_392c2cefdc4491ac4426c7239a313773.setIcon(div_icon_4ba40f1afc9e54911e3bfae88d8cd5ac);
+            
+    
+            var marker_23ece5929ff38de2671e16dcfc918b5b = L.marker(
+                [40.67107292712875, -73.9850359162936],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_ec94a5af1d92ee61cbf52ce7beb7fd93 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e11\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_23ece5929ff38de2671e16dcfc918b5b.setIcon(div_icon_ec94a5af1d92ee61cbf52ce7beb7fd93);
+            
+    
+            var marker_a002a4447733fc19e4c6775c76423897 = L.marker(
+                [40.684734495524616, -73.9698422512731],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_cf5f9ae7d8b1c4480cdc1e4c83d22c89 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e8\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_a002a4447733fc19e4c6775c76423897.setIcon(div_icon_cf5f9ae7d8b1c4480cdc1e4c83d22c89);
+            
+    
+            var marker_a19d1999c916e9a546bcc4c8abd5826c = L.marker(
+                [40.60817820634552, -73.95940863262203],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_a1b9b91b1535eb5269d72fc36fd9cbbb = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e14\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_a19d1999c916e9a546bcc4c8abd5826c.setIcon(div_icon_a1b9b91b1535eb5269d72fc36fd9cbbb);
+            
+    
+            var marker_5c9b3307f20c6a793f82a5b2192de3b3 = L.marker(
+                [40.688098572565195, -73.98835487655522],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_05f530f606783250ebc309f12eb81d7e = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e6\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_5c9b3307f20c6a793f82a5b2192de3b3.setIcon(div_icon_05f530f606783250ebc309f12eb81d7e);
+            
+    
+            var marker_be759bcc9c9e6c80b4c0673e27cb7366 = L.marker(
+                [40.6324074950048, -73.94903907107047],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_ec38a61983ad3f22f06627ea8745c135 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e15\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_be759bcc9c9e6c80b4c0673e27cb7366.setIcon(div_icon_ec38a61983ad3f22f06627ea8745c135);
+            
+    
+            var marker_87c2c72f7fa4411f5d2b63c39251109a = L.marker(
+                [40.64280213873625, -74.01213175591899],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_eeb35bda7bd9df057a824db27867b4e5 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e17\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_87c2c72f7fa4411f5d2b63c39251109a.setIcon(div_icon_eeb35bda7bd9df057a824db27867b4e5);
+            
+    
+            var marker_251b352f3f3af3fceb8f62a8a18f5df9 = L.marker(
+                [40.621607780277955, -74.02667279999773],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_0db4a1f58c6d4c4c61087f98a68d395c = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e16\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_251b352f3f3af3fceb8f62a8a18f5df9.setIcon(div_icon_0db4a1f58c6d4c4c61087f98a68d395c);
+            
+    
+            var marker_1064fb562d8c5eeda31f11cf13ea80a4 = L.marker(
+                [40.71146346210751, -73.94595444639842],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_7b08b9377233940c15cfa8778e797810 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e18\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_1064fb562d8c5eeda31f11cf13ea80a4.setIcon(div_icon_7b08b9377233940c15cfa8778e797810);
+            
+    
+            var marker_0ef7b13e34eb144b352b41507a713ed1 = L.marker(
+                [40.702929773404456, -73.9424900375087],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_29439d476c8f72d5aac2d43bd1e250eb = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e19\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_0ef7b13e34eb144b352b41507a713ed1.setIcon(div_icon_29439d476c8f72d5aac2d43bd1e250eb);
+            
+    
+            var marker_110b6848cee5c50cb49682b0a5099316 = L.marker(
+                [40.66896936465017, -73.91368577242808],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_193891098563713f9b55e997c9cb77a5 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e20\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_110b6848cee5c50cb49682b0a5099316.setIcon(div_icon_193891098563713f9b55e997c9cb77a5);
+            
+    
+            var marker_a1ede3fbbcb557098cbff64a8dfd09a6 = L.marker(
+                [40.577272289441574, -73.96261276512548],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_0cb86969a5476dd5576726968c13099e = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e21\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_a1ede3fbbcb557098cbff64a8dfd09a6.setIcon(div_icon_0cb86969a5476dd5576726968c13099e);
+            
+    
+            var marker_d6407bcd0c65611f4b5726ac24e82b19 = L.marker(
+                [40.69451639583908, -73.99330897519678],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_43106f432d5cc37af1c5807bed572dc9 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e2\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_d6407bcd0c65611f4b5726ac24e82b19.setIcon(div_icon_43106f432d5cc37af1c5807bed572dc9);
+            
+    
+            var marker_9005893da8ce5abebe1efe5bdd57e69f = L.marker(
+                [40.6803026994027, -73.97457894177737],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_210d19e15e6d9643b0b5d66496a13d6d = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e10\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_9005893da8ce5abebe1efe5bdd57e69f.setIcon(div_icon_210d19e15e6d9643b0b5d66496a13d6d);
+            
+    
+            var marker_2e92e2001b27e5502cd41c2415de91c3 = L.marker(
+                [40.6720860854364, -73.90080237953931],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_435a9affd69345b25bbac08940b038c4 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e22\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_2e92e2001b27e5502cd41c2415de91c3.setIcon(div_icon_435a9affd69345b25bbac08940b038c4);
+            
+    
+            var marker_7f736be48664635b50ddb5f89343799b = L.marker(
+                [40.68181000546142, -73.87844102591488],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_78a114041298ea2d10c4fd59779c8b50 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #333; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003e23\u003c/div\u003e",
+  "iconSize": [20, 20],
+  "iconAnchor": [10, 10],
+  "className": "empty",
+});
+        
+    
+                marker_7f736be48664635b50ddb5f89343799b.setIcon(div_icon_78a114041298ea2d10c4fd59779c8b50);
+            
+    
+            var marker_b42e80ff7680fa2cb86ff6e7842a25c8 = L.marker(
+                [40.67883704471867, -73.98752697477342],
+                {
+}
+            ).addTo(feature_group_74831bdefbdb9dab3f3b2d9cec57a726);
+        
+    
+            var div_icon_c7a9fd9303f8abffa2d05b9bc023d716 = L.divIcon({
+  "html": "\u003cdiv style=\"font-size: 10px; font-weight: bold; color: #cc0000; text-shadow: 1px 1px 1px white, -1px -1px 1px white, 1px -1px 1px white, -1px 1px 1px white;\"\u003eGOWANUS\u003c/div\u003e",
+  "iconSize": [60, 20],
+  "iconAnchor": [30, 10],
+  "className": "empty",
+});
+        
+    
+                marker_b42e80ff7680fa2cb86ff6e7842a25c8.setIcon(div_icon_c7a9fd9303f8abffa2d05b9bc023d716);
+            
+    
+            feature_group_74831bdefbdb9dab3f3b2d9cec57a726.addTo(map_29f97117fe7e75d51837f7bfe7ce10e0);
+        
+    
+            var layer_control_81e67cf3a042a85fb39c467f393a257d_layers = {
+                base_layers : {
+                    "Light (CartoDB)" : tile_layer_a13e30d4e41238d956cdd43a7c1dc40a,
+                    "Detailed (OpenStreetMap)" : tile_layer_openstreetmap,
+                },
+                overlays :  {
+                    "Brooklyn BIDs" : feature_group_201b68f74669330f64a3db82db59ce4e,
+                    "Gowanus BID (Proposed)" : feature_group_9f22e55fcd48d640bff2476d0467cad9,
+                    "BID Numbers" : feature_group_74831bdefbdb9dab3f3b2d9cec57a726,
+                },
+            };
+            let layer_control_81e67cf3a042a85fb39c467f393a257d = L.control.layers(
+                layer_control_81e67cf3a042a85fb39c467f393a257d_layers.base_layers,
+                layer_control_81e67cf3a042a85fb39c467f393a257d_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_29f97117fe7e75d51837f7bfe7ce10e0);
+
+        
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gowanus BID Analysis</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #1e7e34;
+            border-bottom: 3px solid #1e7e34;
+            padding-bottom: 10px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .card a {
+            display: inline-block;
+            background-color: #1e7e34;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .card a:hover {
+            background-color: #165a26;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gowanus BID Analysis</h1>
+    <p>Interactive maps and data visualizations for the proposed Gowanus Business Improvement District (BID) in Brooklyn, NYC.</p>
+
+    <div class="card">
+        <h2>Brooklyn BIDs Map</h2>
+        <p>Interactive map showing all 23 Brooklyn BIDs with the proposed Gowanus BID location. Colors indicate average assessment per property (Avg/Prop) - from light blue (lowest) to dark red (highest).</p>
+        <a href="brooklyn_bids.html">View Brooklyn BIDs Map</a>
+    </div>
+
+    <div class="card">
+        <h2>NYC BIDs Overview</h2>
+        <p>Citywide overview of all 76 Business Improvement Districts across NYC's five boroughs, with aggregate statistics on properties, assessments, and budgets.</p>
+        <a href="bid_overview.html">View NYC BIDs Overview</a>
+    </div>
+
+    <div class="footer">
+        <p>Data Source: NYC Small Business Services (via NYC Open Data API)<br>
+        Maps built with Leaflet.js and Folium</p>
+    </div>
+</body>
+</html>
