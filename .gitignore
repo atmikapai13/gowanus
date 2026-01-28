@@ -1,0 +1,14 @@
+# Large GIS data files (too big for GitHub)
+gowanus_bid_gis/
+1_BID_data/DATA/*.geojson
+1_BID_data/DATA/tracts.json
+
+# Keep the HTML snippet files but ignore data
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+
+# OS files
+.DS_Store
