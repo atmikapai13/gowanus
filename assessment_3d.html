@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Property Assessments — Brooklyn BIDs</title>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #deck-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+        /* Tooltip */
+        #tooltip {
+            position: absolute;
+            z-index: 10;
+            pointer-events: none;
+            background: rgba(20, 20, 30, 0.92);
+            color: #eee;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 320px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        #tooltip .tt-addr { font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 4px; }
+        #tooltip .tt-val { color: #7df; font-size: 15px; font-weight: 700; }
+        #tooltip .tt-bid { color: #ccc; font-size: 12px; margin-top: 2px; }
+        #tooltip .tt-detail { color: #aaa; font-size: 12px; }
+
+        /* Info panel */
+        #info-panel {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 5;
+            background: rgba(18, 18, 28, 0.92);
+            color: #ddd;
+            padding: 18px 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(6px);
+        }
+        #info-panel h2 {
+            font-size: 15px;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        #info-panel .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        #info-panel .stat-box {
+            background: rgba(255,255,255,0.06);
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+        #info-panel .stat-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        #info-panel .stat-value { font-size: 16px; font-weight: 700; color: #fff; margin-top: 2px; }
+        #info-panel .legend-title { font-size: 11px; color: #999; margin-bottom: 6px; }
+        #info-panel .bid-list { font-size: 11px; line-height: 1.8; max-height: 40vh; overflow-y: auto; }
+        #info-panel .bid-item { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 4px; border-radius: 4px; transition: background 0.15s; }
+        #info-panel .bid-item:hover { background: rgba(255,255,255,0.08); }
+        #info-panel .bid-item.active { background: rgba(255,255,255,0.12); }
+        #info-panel .bid-item.dimmed { opacity: 0.35; }
+        #info-panel .bid-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        #info-panel .source { font-size: 9px; color: #666; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
+        .filter-btn {
+            font-size: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .filter-btn:hover { background: rgba(255,255,255,0.12); color: #ddd; }
+        .filter-btn.active { background: rgba(30,180,60,0.2); border-color: rgba(30,180,60,0.5); color: #6ece6e; }
+
+        /* Back link */
+        #back-link {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 5;
+            background: rgba(18, 18, 28, 0.88);
+            color: #aaa;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        #back-link:hover { background: rgba(30, 30, 50, 0.95); color: #fff; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <canvas id="deck-canvas"></canvas>
+    <div id="tooltip"></div>
+
+    <a id="back-link" href="index.html">&larr; Back</a>
+
+    <div id="info-panel">
+        <h2>Property Values of BIDs<br>in Brooklyn<br><span style="font-size:11px;font-weight:400;color:#999;">assessed by Dept of Finance (for property tax)</span></h2>
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Total Lots</div>
+                <div class="stat-value" id="stat-lots">—</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Assessed Prop Val</div>
+                <div class="stat-value" id="stat-assessed">—</div>
+            </div>
+        </div>
+        <div class="legend-title" style="margin-bottom: 10px;">Column height = DOF assessed value</div>
+        <div class="legend-title">BID Color = median assessed value per lot</div>
+        <div id="color-scale" style="display:flex;gap:0;margin-bottom:8px;border-radius:3px;overflow:hidden;height:10px;">
+            <div style="flex:1;background:rgb(58,110,128)" title="Low"></div>
+            <div style="flex:1;background:rgb(112,140,150)"></div>
+            <div style="flex:1;background:rgb(175,170,163)"></div>
+            <div style="flex:1;background:rgb(180,130,105)"></div>
+            <div style="flex:1;background:rgb(172,82,50)" title="High"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:#777;margin-bottom:8px;">
+            <span>Lower</span><span>Higher</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <button class="filter-btn" id="btn-similar-med">Similar Median to Gowanus</button>
+            <button class="filter-btn" id="btn-similar-avg">Similar Avg to Gowanus</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;padding:0 4px;">
+            <span style="width:10px;flex-shrink:0"></span>
+            <span style="flex:1">BID</span>
+            <span style="white-space:nowrap">Prop Val</span>
+            <span style="white-space:nowrap;width:62px;text-align:right">Med/Lot</span>
+            <span style="white-space:nowrap;width:62px;text-align:right">Avg/Lot</span>
+        </div>
+        <div class="bid-list" id="bid-list"></div>
+        <div class="source">
+            Source: NYC PLUTO &amp; BID data via NYC Open Data<br>
+            Visualization: deck.gl + MapLibre GL
+        </div>
+    </div>
+
+    <script>
+    function formatCurrency(val) {
+        if (!val || val <= 0) return '$0';
+        if (val >= 1e9) return '$' + (val / 1e9).toFixed(1) + 'B';
+        if (val >= 1e6) return '$' + (val / 1e6).toFixed(1) + 'M';
+        if (val >= 1e3) return '$' + (val / 1e3).toFixed(0) + 'K';
+        return '$' + val.toLocaleString();
+    }
+
+    // -----------------------------------------------------------------------
+    // NYC DOF Building Classification codes
+    // -----------------------------------------------------------------------
+    const BLDG_CLASS = {
+        A0:'Cape Cod',A1:'Two Stories - Detached',A2:'One Story - Permanent Living',A3:'Large Suburban Residence',
+        A4:'City Residence One Family',A5:'One Family Attached/Semi-Detached',A6:'Summer Cottage',
+        A7:'Mansion Type/Town House',A8:'Bungalow Colony',A9:'Misc. One Family',
+        B1:'Two Family Brick',B2:'Two Family Frame',B3:'Two Family (Converted)',B9:'Misc. Two Family',
+        C0:'Three Families',C1:'Walk-Up Apt Over 6 Families',C2:'Walk-Up Apt 5-6 Families',
+        C3:'Walk-Up Apt 4 Families',C4:'Old Law Tenement',C5:'Converted Dwelling/Rooming House',
+        C6:'Walk-Up Co-Op',C7:'Walk-Up Apt Over 6 w/ Stores',C8:'Walk-Up Co-Op (Loft Conv.)',
+        C9:'Garden Apartments',CB:'Walk-Up Apt <11 Units',CC:'Walk-Up Co-Op <11 Units',CM:'Mobile Homes/Trailers',
+        D0:'Elevator Co-Op (Loft Conv.)',D1:'Elevator Apt Semi-Fireproof',D2:'Elevator Apt Artists in Residence',
+        D3:'Elevator Apt Fireproof',D4:'Elevator Co-Op',D5:'Elevator Apt Converted',
+        D6:'Elevator Apt Fireproof w/ Stores',D7:'Elevator Apt Semi-Fireproof w/ Stores',
+        D8:'Elevator Apt Luxury',D9:'Elevator Apt Misc.',DB:'Elevator Apt <11 Units',DC:'Elevator Co-Op <11 Units',
+        E1:'General Warehouse',E2:'Contractors Warehouse',E7:'Self-Storage Warehouse',E9:'Misc. Warehouse',
+        F1:'Factory Heavy Mfg Fireproof',F2:'Factory Special Construction',F4:'Factory Industrial Semi-Fireproof',
+        F5:'Factory Light Manufacturing',F8:'Factory Tank Farm',F9:'Factory Misc.',
+        G0:'Residential Garage',G1:'Parking Garage',G2:'Auto Body/Repair',G3:'Gas Station w/ Retail',
+        G4:'Gas Station w/ Service',G5:'Gas Station Only',G6:'Licensed Parking Lot',G7:'Unlicensed Parking Lot',
+        G8:'Car Sales/Rental',G9:'Misc. Garage',GU:'Car Sales/Rental (No Showroom)',GW:'Car Wash/Lubritorium',
+        HB:'Boutique Hotel',HH:'Hostel',HR:'SRO',HS:'Extended Stay/Suite Hotel',
+        H1:'Luxury Hotel',H2:'Full Service Hotel',H3:'Limited Service Hotel',H4:'Motel',
+        H5:'Hotel Private Club',H6:'Apartment Hotel',H7:'Apartment Hotel Co-Op',H8:'Dormitory',H9:'Misc. Hotel',
+        I1:'Hospital/Sanitarium',I2:'Infirmary',I3:'Dispensary',I4:'Hospital Staff Facility',
+        I5:'Health Center/Clinic',I6:'Nursing Home',I7:'Adult Care Facility',I9:'Misc. Health Care',
+        J1:'Theatre <400 Seats',J2:'Theatre >400 Seats',J3:'Motion Picture Theatre',J4:'Legitimate Theatre',
+        J5:'Theatre in Mixed-Use Bldg',J6:'Television Studio',J7:'Off Broadway Theatre',
+        J8:'Multiplex Theatre',J9:'Misc. Theatre',
+        K1:'One Story Retail',K2:'Multi-Story Retail',K3:'Department Store',K4:'Retail w/ Other Uses',
+        K5:'Food Establishment',K6:'Shopping Center',K7:'Banking Facility',K8:'Big Box Retail',K9:'Misc. Store',
+        L1:'Loft Over 8 Stories',L2:'Loft Fireproof/Storage',L3:'Loft Semi-Fireproof',
+        L8:'Loft w/ Retail',L9:'Misc. Loft',
+        M1:'Church/Synagogue/Chapel',M2:'Mission House',M3:'Parsonage/Rectory',M4:'Convent',M9:'Misc. Religious',
+        N1:'Asylum',N2:'Home for Indigent/Aged/Homeless',N3:'Orphanage',N4:'Detention House',N9:'Misc. Asylum/Home',
+        O1:'Office 1 Story',O2:'Office 2-6 Stories',O3:'Office 7-19 Stories',O4:'Office 20+ Stories',
+        O5:'Office w/ Comm 1-6 Stories',O6:'Office w/ Comm 7-19 Stories',O7:'Professional Bldg/Funeral Home',
+        O8:'Office w/ Apartments',O9:'Misc. Office/Old Bank Bldg',
+        P1:'Concert Hall',P2:'Lodge Room',P3:'YWCA/YMCA/PAL',P4:'Beach Club',P5:'Community Center',
+        P6:'Amusement/Bath House/Boat House',P7:'Museum',P8:'Library',P9:'Misc. Indoor Public Assembly',
+        Q0:'Outdoor Recreation',Q1:'Parks/Recreation Facility',Q2:'Playground',Q3:'Outdoor Pool',Q4:'Beach',
+        Q5:'Golf Course',Q6:'Stadium/Race Track/Ball Field',Q7:'Tennis Court',Q8:'Marina/Yacht Club',
+        Q9:'Misc. Outdoor Recreation',QG:'Golf Course',
+        RA:'Condo Cultural/Medical/Educational',RB:'Condo Office Space',RG:'Condo Indoor Parking',
+        RH:'Condo Hotel/Boatel',RK:'Condo Retail Space',RP:'Condo Outdoor Parking',RR:'Condo Rentals',
+        RS:'Condo Non-Business Storage',RT:'Condo Terraces/Gardens',RW:'Condo Warehouse/Factory',
+        RC:'Condo Commercial',RD:'Condo Residential',RI:'Condo Mixed Industrial & Commercial',
+        RM:'Condo Mixed Residential & Commercial',RX:'Condo Mixed Res/Comm/Industrial',
+        RZ:'Condo Mixed Residential & Warehouse',
+        R0:'Condo Billing Lot',R1:'Condo Res. 2-10 Unit Bldg',R2:'Condo Res. Walk-Up',
+        R3:'Condo Res. 1-3 Story',R4:'Condo Res. Elevator',R5:'Condo Misc. Commercial',
+        R6:'Condo Res. 1-3 Unit (Class 1)',R7:'Condo Comm. 1-3 Unit (Class 1)',
+        R8:'Condo Comm. 2-10 Unit',R9:'Co-Op Within Condo',
+        S0:'1 Family w/ 2 Stores/Offices',S1:'1 Family w/ 1 Store/Office',S2:'2 Family w/ 1 Store/Office',
+        S3:'3 Family w/ 1 Store/Office',S4:'4 Family w/ 1 Store/Office',S5:'5-6 Family w/ 1 Store/Office',
+        S9:'Dwelling w/ Stores/Offices',
+        T1:'Airport/Airfield/Terminal',T2:'Pier/Dock/Bulkhead',T9:'Misc. Transportation',
+        U0:'Utility Land & Building',U1:'Bridge/Tunnel/Highway',U2:'Gas/Electric Utility',
+        U3:'Ceiling Railroad',U4:'Telephone Utility',U5:'Communication Facility',
+        U6:'Railroad Private',U7:'Transportation Public',U8:'Revocable Consent',U9:'Misc. Utility',
+        V0:'Vacant Residential',V1:'Vacant Commercial/Manhattan Residential',V2:'Vacant Commercial Adjacent Res.',
+        V3:'Vacant Primarily Residential',V4:'Police/Fire Department',V5:'School Site/Yard',
+        V6:'Library/Hospital/Museum',V7:'Port Authority',V8:'State/Federal Government',V9:'Misc. Vacant Land',
+        VG:'Community Garden (Residential)',VC:'Community Garden (Commercial)',
+        W1:'Public School',W2:'Parochial School/Yeshiva',W3:'School/Academy',W4:'Training School',
+        W5:'City University',W6:'College/University',W7:'Theological Seminary',W8:'Private School',
+        W9:'Misc. Educational',
+        Y1:'Fire Department',Y2:'Police Department',Y3:'Prison/Jail',Y4:'Military Installation',
+        Y5:'Dept of Real Estate',Y6:'Dept of Sanitation',Y7:'Dept of Ports & Terminals',
+        Y8:'Dept of Public Works',Y9:'Dept of Environmental Protection',
+        Z0:'Tennis Court/Pool/Shed',Z1:'Court House',Z2:'Public Parking',Z3:'Post Office',
+        Z4:'Foreign Government',Z5:'United Nations',Z7:'Easement',Z8:'Cemetery',Z9:'Other Misc.',
+    };
+
+    // -----------------------------------------------------------------------
+    // Load data and initialize
+    // -----------------------------------------------------------------------
+    const INITIAL_VIEW = {
+        latitude: 40.688,
+        longitude: -73.982,
+        zoom: 13.5,
+        pitch: 50,
+        bearing: -20,
+    };
+
+    let deckgl = null;
+
+    fetch('1_BID_data/DATA/gowanus_parcels.json?v=' + Date.now())
+        .then(r => r.json())
+        .then(data => init(data))
+        .catch(err => {
+            document.getElementById('stat-lots').textContent = 'Error';
+            console.error('Failed to load parcel data:', err);
+        });
+
+    function init(data) {
+        const parcels = data.parcels || [];
+        const bidGeoJson = data.bid_boundaries || { type: 'FeatureCollection', features: [] };
+        console.log('Loaded parcels:', parcels.length, 'Gowanus:', parcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)').length);
+
+        // --- Compute height scale cap (99th percentile) ---
+        const values = parcels.map(p => p.assesstot).filter(v => v > 0).sort((a, b) => a - b);
+        const p99 = values[Math.floor(values.length * 0.99)] || 1;
+        const maxVal = p99; // cap at 99th percentile to avoid extreme outliers
+
+        // --- Update info panel ---
+        const totalAssessed = parcels.reduce((s, p) => s + (p.assesstot || 0), 0);
+        document.getElementById('stat-lots').textContent = parcels.length.toLocaleString();
+        document.getElementById('stat-assessed').textContent = formatCurrency(totalAssessed);
+
+        // BID list in panel with DOF totals — sorted by value, diverging color scale
+        const bidListEl = document.getElementById('bid-list');
+        const bidTotals = {};
+        const bidLotCounts = {};
+        parcels.forEach(p => {
+            bidTotals[p.bid_name] = (bidTotals[p.bid_name] || 0) + (p.assesstot || 0);
+            bidLotCounts[p.bid_name] = (bidLotCounts[p.bid_name] || 0) + 1;
+        });
+
+        // Compute median assessed value per BID (needed for sort + color)
+        const allBidNames = [...new Set(parcels.map(p => p.bid_name))];
+        const bidMedians = {};
+        allBidNames.forEach(name => {
+            const vals = parcels
+                .filter(p => p.bid_name === name && p.assesstot > 0)
+                .map(p => p.assesstot)
+                .sort((a, b) => a - b);
+            if (vals.length === 0) { bidMedians[name] = 0; return; }
+            const mid = Math.floor(vals.length / 2);
+            bidMedians[name] = vals.length % 2 ? vals[mid] : (vals[mid - 1] + vals[mid]) / 2;
+        });
+
+        // Sort BIDs by median/lot descending
+        const bidNames = allBidNames
+            .sort((a, b) => (bidMedians[b] || 0) - (bidMedians[a] || 0));
+
+        // Diverging color scale: blue (low) → gray (mid) → copper/red (high)
+        const DIVERGING_STOPS = [
+            [0.0, [58, 110, 128]],   // teal-blue
+            [0.25, [112, 140, 150]],  // muted blue-gray
+            [0.5, [175, 170, 163]],   // neutral gray
+            [0.75, [180, 130, 105]],  // muted rust
+            [1.0, [172, 82, 50]],     // copper-red
+        ];
+
+        function interpolateColor(t) {
+            t = Math.max(0, Math.min(1, t));
+            for (let i = 0; i < DIVERGING_STOPS.length - 1; i++) {
+                const [t0, c0] = DIVERGING_STOPS[i];
+                const [t1, c1] = DIVERGING_STOPS[i + 1];
+                if (t >= t0 && t <= t1) {
+                    const f = (t - t0) / (t1 - t0);
+                    return [
+                        Math.round(c0[0] + f * (c1[0] - c0[0])),
+                        Math.round(c0[1] + f * (c1[1] - c0[1])),
+                        Math.round(c0[2] + f * (c1[2] - c0[2])),
+                    ];
+                }
+            }
+            return DIVERGING_STOPS[DIVERGING_STOPS.length - 1][1];
+        }
+
+        // Assign colors by median/lot rank so the full palette is used evenly
+        // bidNames is already sorted descending by median
+        const bidCount = bidNames.length;
+        const bidColorMap = {};
+        bidNames.forEach((name, i) => {
+            // i=0 is highest value → t=1 (copper), i=last is lowest → t=0 (blue)
+            const t = bidCount > 1 ? (bidCount - 1 - i) / (bidCount - 1) : 0.5;
+            bidColorMap[name] = interpolateColor(t);
+        });
+
+        // Apply computed colors back onto parcel data
+        parcels.forEach(p => {
+            p.color = bidColorMap[p.bid_name] || p.color;
+        });
+
+        // Update boundary GeoJSON feature colors
+        if (bidGeoJson && bidGeoJson.features) {
+            bidGeoJson.features.forEach(f => {
+                const name = f.properties.name;
+                if (bidColorMap[name]) {
+                    f.properties.color = bidColorMap[name];
+                }
+            });
+        }
+
+        bidListEl.innerHTML = bidNames.map(name => {
+            const c = bidColorMap[name] || [128, 128, 128];
+            const total = bidTotals[name] || 0;
+            const median = bidMedians[name] || 0;
+            const lots = bidLotCounts[name] || 1;
+            const avg = total / lots;
+            const isGowanus = name === 'Gowanus BID (Proposed)';
+            const rowStyle = isGowanus ? 'border:1px solid rgba(30,180,60,0.6);background:rgba(30,180,60,0.08)' : '';
+            return `<div class="bid-item" data-bid="${name}" style="${rowStyle}"><span class="bid-dot" style="background:rgb(${c.join(',')})"></span><span style="flex:1">${name}</span><span style="color:#999;font-size:10px;white-space:nowrap">${formatCurrency(total)}</span><span style="color:#666;font-size:10px;white-space:nowrap;width:62px;text-align:right">${formatCurrency(median)}</span><span style="color:#666;font-size:10px;white-space:nowrap;width:62px;text-align:right">${formatCurrency(avg)}</span></div>`;
+        }).join('');
+
+        // --- Height scale: tallest column ~800m in map units ---
+        const heightScale = 800 / (maxVal || 1);
+
+        // --- MapLibre base map ---
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            center: [INITIAL_VIEW.longitude, INITIAL_VIEW.latitude],
+            zoom: INITIAL_VIEW.zoom,
+            pitch: INITIAL_VIEW.pitch,
+            bearing: INITIAL_VIEW.bearing,
+            antialias: true,
+        });
+
+        // --- deck.gl overlay (with filter support) ---
+        const activeBids = new Set(); // selected BIDs, empty = show all
+
+        function buildLayers() {
+            const hasFilter = activeBids.size > 0;
+            const filteredParcels = hasFilter
+                ? parcels.filter(p => activeBids.has(p.bid_name))
+                : parcels;
+
+            const filteredBoundaries = hasFilter
+                ? { ...bidGeoJson, features: bidGeoJson.features.filter(f => activeBids.has(f.properties.name)) }
+                : bidGeoJson;
+
+            const columnLayer = new deck.ColumnLayer({
+                id: 'columns',
+                data: filteredParcels,
+                getPosition: d => [d.lon, d.lat],
+                getElevation: d => Math.max(d.assesstot * heightScale, 5),
+                getFillColor: d => [...(d.color || [128, 128, 128]), 200],
+                radius: 12,
+                diskResolution: 6,
+                extruded: true,
+                pickable: true,
+                elevationScale: 1,
+                material: {
+                    ambient: 0.4,
+                    diffuse: 0.6,
+                    shininess: 40,
+                    specularColor: [60, 60, 60],
+                },
+            });
+
+            const boundaryLayer = new deck.GeoJsonLayer({
+                id: 'bid-boundaries',
+                data: filteredBoundaries,
+                stroked: true,
+                filled: true,
+                getFillColor: d => {
+                    const c = d.properties.color || [128, 128, 128];
+                    return [...c, 15];
+                },
+                getLineColor: d => {
+                    if (d.properties.name === 'Gowanus BID (Proposed)') return [255, 0, 0, 220];
+                    const c = d.properties.color || [128, 128, 128];
+                    return [...c, 180];
+                },
+                getLineWidth: d => d.properties.name === 'Gowanus BID (Proposed)' ? 3 : 2,
+                lineWidthUnits: 'pixels',
+                pickable: false,
+            });
+
+            return [boundaryLayer, columnLayer];
+        }
+
+        function updateStats() {
+            const hasFilter = activeBids.size > 0;
+            const subset = hasFilter ? parcels.filter(p => activeBids.has(p.bid_name)) : parcels;
+            const total = subset.reduce((s, p) => s + (p.assesstot || 0), 0);
+            document.getElementById('stat-lots').textContent = subset.length.toLocaleString();
+            document.getElementById('stat-assessed').textContent = formatCurrency(total);
+        }
+
+        function updateLegendHighlight() {
+            const hasFilter = activeBids.size > 0;
+            bidListEl.querySelectorAll('.bid-item').forEach(el => {
+                const name = el.getAttribute('data-bid');
+                el.classList.toggle('active', activeBids.has(name));
+                el.classList.toggle('dimmed', hasFilter && !activeBids.has(name));
+            });
+        }
+
+        const deckOverlay = new deck.MapboxOverlay({
+            layers: buildLayers(),
+            getTooltip: ({object}) => {
+                if (!object) return null;
+                return null; // we handle tooltip manually below
+            },
+        });
+
+        map.addControl(new maplibregl.NavigationControl(), 'bottom-left');
+        map.addControl(deckOverlay);
+
+        // --- Legend click to filter ---
+        bidListEl.addEventListener('click', (e) => {
+            const item = e.target.closest('.bid-item');
+            if (!item) return;
+            const bid = item.getAttribute('data-bid');
+            if (activeBids.has(bid)) {
+                activeBids.delete(bid);
+            } else {
+                activeBids.add(bid);
+            }
+            deckOverlay.setProps({ layers: buildLayers() });
+            updateStats();
+            updateLegendHighlight();
+            // Clear any active similarity button when manually clicking BIDs
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        });
+
+        // --- Similarity filter buttons ---
+        const SIMILARITY_THRESHOLD = 0.5; // ±50% of Gowanus value
+        const gowanusMedian = bidMedians['Gowanus BID (Proposed)'] || 0;
+        const gowanusAvg = (bidTotals['Gowanus BID (Proposed)'] || 0) / (bidLotCounts['Gowanus BID (Proposed)'] || 1);
+
+        function applySimilarityFilter(metric, btn) {
+            const isActive = btn.classList.contains('active');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            activeBids.clear();
+
+            if (!isActive) {
+                const gVal = metric === 'median' ? gowanusMedian : gowanusAvg;
+                const lo = gVal * (1 - SIMILARITY_THRESHOLD);
+                const hi = gVal * (1 + SIMILARITY_THRESHOLD);
+                bidNames.forEach(name => {
+                    const val = metric === 'median'
+                        ? (bidMedians[name] || 0)
+                        : ((bidTotals[name] || 0) / (bidLotCounts[name] || 1));
+                    if (val >= lo && val <= hi) activeBids.add(name);
+                });
+                // Always include Gowanus itself
+                activeBids.add('Gowanus BID (Proposed)');
+                btn.classList.add('active');
+            }
+
+            deckOverlay.setProps({ layers: buildLayers() });
+            updateStats();
+            updateLegendHighlight();
+        }
+
+        document.getElementById('btn-similar-med').addEventListener('click', function() {
+            applySimilarityFilter('median', this);
+        });
+        document.getElementById('btn-similar-avg').addEventListener('click', function() {
+            applySimilarityFilter('avg', this);
+        });
+
+        // --- Custom tooltip ---
+        const tooltip = document.getElementById('tooltip');
+        const canvas = map.getCanvas();
+
+        function handleHover(event) {
+            const info = deckOverlay.pickObject({
+                x: event.offsetX || event.layerX,
+                y: event.offsetY || event.layerY,
+            });
+            if (info && info.object) {
+                const d = info.object;
+                tooltip.style.display = 'block';
+                tooltip.style.left = (event.offsetX + 12) + 'px';
+                tooltip.style.top = (event.offsetY + 12) + 'px';
+                const yr = d.yearbuilt > 0 ? d.yearbuilt : '—';
+                const fl = d.numfloors > 0 ? d.numfloors : '—';
+                const cls = BLDG_CLASS[d.bldgclass] || d.bldgclass || '—';
+                tooltip.innerHTML = `
+                    <div class="tt-addr">${d.address || 'No address'}</div>
+                    <div class="tt-val">${formatCurrency(d.assesstot)}</div>
+                    <div class="tt-bid">${d.bid_name}</div>
+                    <div class="tt-detail">${cls} &middot; Year: ${yr} &middot; Floors: ${fl}</div>
+                `;
+                canvas.style.cursor = 'pointer';
+            } else {
+                tooltip.style.display = 'none';
+                canvas.style.cursor = '';
+            }
+        }
+
+        canvas.addEventListener('mousemove', handleHover);
+        canvas.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+            canvas.style.cursor = '';
+        });
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "Church Flatbush Community Alliance": {
+    "dof_total": 248386931.0,
+    "lot_count": 301
+  },
+  "Bay Ridge 5th Avenue": {
+    "dof_total": 98109128.0,
+    "lot_count": 342
+  },
+  "Kings Highway": {
+    "dof_total": 128181750.0,
+    "lot_count": 171
+  },
+  "Flatbush-Nostrand Junction": {
+    "dof_total": 221629517.0,
+    "lot_count": 143
+  },
+  "Sunset Park": {
+    "dof_total": 182101830.0,
+    "lot_count": 382
+  },
+  "86th Street Bay Ridge": {
+    "dof_total": 113122289.0,
+    "lot_count": 130
+  },
+  "Grand Street": {
+    "dof_total": 137982743.0,
+    "lot_count": 174
+  },
+  "Pitkin Avenue": {
+    "dof_total": 90361996.0,
+    "lot_count": 190
+  },
+  "Graham Avenue": {
+    "dof_total": 106810373.0,
+    "lot_count": 150
+  },
+  "Brighton Beach": {
+    "dof_total": 111381510.0,
+    "lot_count": 151
+  },
+  "East Brooklyn": {
+    "dof_total": 172953015.0,
+    "lot_count": 439
+  },
+  "Cypress Hills Fulton": {
+    "dof_total": 103858493.0,
+    "lot_count": 389
+  }
+}

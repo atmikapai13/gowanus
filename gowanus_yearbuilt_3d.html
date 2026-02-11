@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gowanus BID — 3D Explorer</title>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/deck.gl@9.0.16/dist.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+
+        .split { position: absolute; top: 0; bottom: 0; width: 50%; }
+        .split-left { left: 0; }
+        .split-right { left: 50%; }
+        .divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.15); z-index: 10; pointer-events: none; }
+
+        .map-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* Tooltip */
+        #tooltip {
+            position: fixed;
+            z-index: 100;
+            pointer-events: none;
+            background: rgba(20, 20, 30, 0.92);
+            color: #eee;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 320px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        #tooltip .tt-addr { font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 4px; }
+        #tooltip .tt-highlight { font-size: 15px; font-weight: 700; }
+        #tooltip .tt-val { color: #aaa; font-size: 12px; margin-top: 2px; }
+        #tooltip .tt-detail { color: #aaa; font-size: 12px; }
+
+        /* Legend panels */
+        .legend-panel {
+            position: absolute;
+            top: 16px;
+            z-index: 5;
+            background: rgba(18, 18, 28, 0.92);
+            color: #ddd;
+            padding: 14px 16px;
+            border-radius: 10px;
+            width: 260px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(6px);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+        .split-left .legend-panel { right: 16px; }
+        .split-right .legend-panel { right: 16px; }
+        .legend-panel h3 {
+            font-size: 13px;
+            color: #fff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .legend-panel .legend-subtitle { font-size: 10px; color: #888; margin-bottom: 10px; }
+        .legend-list { font-size: 11px; line-height: 1.8; }
+        .legend-list .leg-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .legend-list .leg-item:hover { background: rgba(255,255,255,0.08); }
+        .legend-list .leg-item.active { background: rgba(255,255,255,0.12); }
+        .legend-list .leg-item.dimmed { opacity: 0.35; }
+        .legend-list .leg-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .legend-panel .source { font-size: 9px; color: #666; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px; }
+
+        /* Back link */
+        #back-link {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 15;
+            background: rgba(18, 18, 28, 0.88);
+            color: #aaa;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        #back-link:hover { background: rgba(30, 30, 50, 0.95); color: #fff; }
+
+        /* Title bar */
+        #title-bar {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            background: rgba(18, 18, 28, 0.92);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            backdrop-filter: blur(6px);
+            text-align: center;
+            white-space: nowrap;
+        }
+        #title-bar .subtitle {
+            font-size: 10px;
+            font-weight: 400;
+            color: #888;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="split split-left">
+        <div id="map-left" class="map-container"></div>
+        <div class="legend-panel">
+            <h3>Year Built</h3>
+            <div class="legend-subtitle">Column height = assessed value</div>
+            <div class="legend-list" id="legend-year"></div>
+            <div class="source">Source: NYC PLUTO via NYC Open Data</div>
+        </div>
+    </div>
+
+    <div class="split split-right">
+        <div id="map-right" class="map-container"></div>
+        <div class="legend-panel">
+            <h3>Building Classification</h3>
+            <div class="legend-subtitle">Column height = assessed value</div>
+            <div class="legend-list" id="legend-class"></div>
+            <div class="source">"Other" includes hotels, religious,<br>educational, government &amp; utilities<br><br>Visualization: deck.gl + MapLibre GL</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div id="tooltip"></div>
+    <a id="back-link" href="index.html">&larr; Back</a>
+    <div id="title-bar">
+        Gowanus BID Explorer
+        <div class="subtitle">555 properties &middot; Median year: 1931</div>
+    </div>
+
+    <script>
+    function formatCurrency(val) {
+        if (!val || val <= 0) return '$0';
+        if (val >= 1e9) return '$' + (val / 1e9).toFixed(1) + 'B';
+        if (val >= 1e6) return '$' + (val / 1e6).toFixed(1) + 'M';
+        if (val >= 1e3) return '$' + (val / 1e3).toFixed(0) + 'K';
+        return '$' + val.toLocaleString();
+    }
+
+    const BLDG_CLASS = {
+        A0:'Cape Cod',A1:'Two Stories - Detached',A2:'One Story - Permanent Living',A3:'Large Suburban Residence',
+        A4:'City Residence One Family',A5:'One Family Attached/Semi-Detached',A6:'Summer Cottage',
+        A7:'Mansion Type/Town House',A8:'Bungalow Colony',A9:'Misc. One Family',
+        B1:'Two Family Brick',B2:'Two Family Frame',B3:'Two Family (Converted)',B9:'Misc. Two Family',
+        C0:'Three Families',C1:'Walk-Up Apt Over 6 Families',C2:'Walk-Up Apt 5-6 Families',
+        C3:'Walk-Up Apt 4 Families',C4:'Old Law Tenement',C5:'Converted Dwelling/Rooming House',
+        C6:'Walk-Up Co-Op',C7:'Walk-Up Apt Over 6 w/ Stores',C8:'Walk-Up Co-Op (Loft Conv.)',
+        C9:'Garden Apartments',CB:'Walk-Up Apt <11 Units',CC:'Walk-Up Co-Op <11 Units',CM:'Mobile Homes/Trailers',
+        D0:'Elevator Co-Op (Loft Conv.)',D1:'Elevator Apt Semi-Fireproof',D2:'Elevator Apt Artists in Residence',
+        D3:'Elevator Apt Fireproof',D4:'Elevator Co-Op',D5:'Elevator Apt Converted',
+        D6:'Elevator Apt Fireproof w/ Stores',D7:'Elevator Apt Semi-Fireproof w/ Stores',
+        D8:'Elevator Apt Luxury',D9:'Elevator Apt Misc.',DB:'Elevator Apt <11 Units',DC:'Elevator Co-Op <11 Units',
+        E1:'General Warehouse',E2:'Contractors Warehouse',E7:'Self-Storage Warehouse',E9:'Misc. Warehouse',
+        F1:'Factory Heavy Mfg Fireproof',F2:'Factory Special Construction',F4:'Factory Industrial Semi-Fireproof',
+        F5:'Factory Light Manufacturing',F8:'Factory Tank Farm',F9:'Factory Misc.',
+        G0:'Residential Garage',G1:'Parking Garage',G2:'Auto Body/Repair',G3:'Gas Station w/ Retail',
+        G4:'Gas Station w/ Service',G5:'Gas Station Only',G6:'Licensed Parking Lot',G7:'Unlicensed Parking Lot',
+        G8:'Car Sales/Rental',G9:'Misc. Garage',GU:'Car Sales/Rental (No Showroom)',GW:'Car Wash/Lubritorium',
+        HB:'Boutique Hotel',HH:'Hostel',HR:'SRO',HS:'Extended Stay/Suite Hotel',
+        H1:'Luxury Hotel',H2:'Full Service Hotel',H3:'Limited Service Hotel',H4:'Motel',
+        H5:'Hotel Private Club',H6:'Apartment Hotel',H7:'Apartment Hotel Co-Op',H8:'Dormitory',H9:'Misc. Hotel',
+        K1:'One Story Retail',K2:'Multi-Story Retail',K3:'Department Store',K4:'Retail w/ Other Uses',
+        K5:'Food Establishment',K6:'Shopping Center',K7:'Banking Facility',K8:'Big Box Retail',K9:'Misc. Store',
+        L1:'Loft Over 8 Stories',L2:'Loft Fireproof/Storage',L3:'Loft Semi-Fireproof',
+        L8:'Loft w/ Retail',L9:'Misc. Loft',
+        M1:'Church/Synagogue/Chapel',M2:'Mission House',M3:'Parsonage/Rectory',M4:'Convent',M9:'Misc. Religious',
+        N9:'Misc. Asylum/Home',
+        O1:'Office 1 Story',O2:'Office 2-6 Stories',O3:'Office 7-19 Stories',O4:'Office 20+ Stories',
+        O5:'Office w/ Comm 1-6 Stories',O6:'Office w/ Comm 7-19 Stories',O7:'Professional Bldg/Funeral Home',
+        O8:'Office w/ Apartments',O9:'Misc. Office/Old Bank Bldg',
+        Q2:'Playground',Q9:'Misc. Outdoor Recreation',QG:'Golf Course',
+        RM:'Condo Mixed Res/Comm',RK:'Condo Retail Space',RW:'Condo Warehouse/Factory',
+        R1:'Condo Res. 2-10 Unit Bldg',R4:'Condo Res. Elevator',R6:'Condo Res. 1-3 Unit',
+        S0:'1 Family w/ 2 Stores/Offices',S1:'1 Family w/ 1 Store/Office',S2:'2 Family w/ 1 Store/Office',
+        S3:'3 Family w/ 1 Store/Office',S4:'4 Family w/ 1 Store/Office',S5:'5-6 Family w/ 1 Store/Office',
+        S9:'Dwelling w/ Stores/Offices',
+        U2:'Gas/Electric Utility',U5:'Communication Facility',U9:'Misc. Utility',
+        V0:'Vacant Residential',V1:'Vacant Commercial',V9:'Misc. Vacant Land',
+        W1:'Public School',W2:'Parochial School/Yeshiva',W9:'Misc. Educational',
+        Y1:'Fire Department',
+        Z9:'Other Misc.',
+    };
+
+    // ----- Year-built eras -----
+    const ERAS = [
+        { label: 'Pre-1900',        min: 0,    max: 1899, color: [180, 70, 45]  },
+        { label: '1900\u20131924',  min: 1900, max: 1924, color: [192, 120, 65] },
+        { label: '1925\u20131949',  min: 1925, max: 1949, color: [185, 160, 110]},
+        { label: '1950\u20131974',  min: 1950, max: 1974, color: [130, 160, 145]},
+        { label: '1975\u20131999',  min: 1975, max: 1999, color: [80, 135, 158] },
+        { label: '2000+',           min: 2000, max: 9999, color: [50, 90, 155]  },
+    ];
+    const UNKNOWN_COLOR = [80, 80, 80];
+
+    function getEraLabel(year) {
+        if (!year || year <= 0) return 'Unknown';
+        const e = ERAS.find(e => year >= e.min && year <= e.max);
+        return e ? e.label : 'Unknown';
+    }
+    function getEraColor(year) {
+        if (!year || year <= 0) return UNKNOWN_COLOR;
+        const e = ERAS.find(e => year >= e.min && year <= e.max);
+        return e ? e.color : UNKNOWN_COLOR;
+    }
+
+    // ----- Building classification groups -----
+    const BLDG_GROUPS = [
+        { label: 'Small Residential',    prefixes: ['A','B','C'],   color: [210, 150, 50]  },
+        { label: 'Elevator Apts/Condos', prefixes: ['D','R'],       color: [190, 75, 100]  },
+        { label: 'Mixed Use',            prefixes: ['S'],           color: [190, 75, 150]  },
+        { label: 'Retail & Office',      prefixes: ['K','O'],       color: [100, 85, 185]  },
+        { label: 'Industrial/Warehouse', prefixes: ['E','F'],       color: [170, 55, 55]   },
+        { label: 'Garage & Parking',     prefixes: ['G'],           color: [60, 155, 150]  },
+        { label: 'Vacant Land',          prefixes: ['V'],           color: [120, 175, 80]  },
+    ];
+    const OTHER_GROUP = { label: 'Other', color: [130, 130, 140] };
+
+    function getBldgGroupLabel(cls) {
+        if (!cls) return OTHER_GROUP.label;
+        const g = BLDG_GROUPS.find(g => g.prefixes.includes(cls.charAt(0).toUpperCase()));
+        return g ? g.label : OTHER_GROUP.label;
+    }
+    function getBldgGroupColor(cls) {
+        if (!cls) return OTHER_GROUP.color;
+        const g = BLDG_GROUPS.find(g => g.prefixes.includes(cls.charAt(0).toUpperCase()));
+        return g ? g.color : OTHER_GROUP.color;
+    }
+
+    // ----- Init -----
+    const INITIAL_VIEW = { latitude: 40.6790, longitude: -73.9905, zoom: 15, pitch: 50, bearing: -20 };
+
+    fetch('1_BID_data/DATA/gowanus_parcels.json?v=' + Date.now())
+        .then(r => r.json())
+        .then(data => init(data))
+        .catch(err => console.error('Failed to load:', err));
+
+    function init(data) {
+        const allParcels = data.parcels || [];
+        const bidGeoJson = data.bid_boundaries || { type: 'FeatureCollection', features: [] };
+        const parcels = allParcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)');
+
+        // Pre-compute
+        parcels.forEach(p => {
+            p.eraLabel  = getEraLabel(p.yearbuilt);
+            p.eraColor  = getEraColor(p.yearbuilt);
+            p.classLabel = getBldgGroupLabel(p.bldgclass);
+            p.classColor = getBldgGroupColor(p.bldgclass);
+        });
+
+        const gowanusBoundary = {
+            type: 'FeatureCollection',
+            features: bidGeoJson.features.filter(f => f.properties.name === 'Gowanus BID (Proposed)'),
+        };
+
+        // Height scale
+        const values = parcels.map(p => p.assesstot).filter(v => v > 0).sort((a, b) => a - b);
+        const p99 = values[Math.floor(values.length * 0.99)] || 1;
+        const heightScale = 800 / p99;
+
+        // Title bar stats
+        const years = parcels.map(p => p.yearbuilt).filter(y => y > 0).sort((a, b) => a - b);
+        const medianYear = years.length > 0 ? years[Math.floor(years.length / 2)] : '—';
+        document.querySelector('#title-bar .subtitle').textContent =
+            `${parcels.length} properties \u00B7 Median year built: ${medianYear}`;
+
+        // ---------------------------------------------------------------
+        // Build legends
+        // ---------------------------------------------------------------
+        function buildLegendHTML(items, counts, vals, totalVal) {
+            const header = `<div style="display:flex;align-items:center;gap:6px;padding:2px 4px 4px;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;"><span style="width:10px"></span><span style="flex:1">Type</span><span style="width:42px;text-align:right">% Prop</span><span style="width:52px;text-align:right">Prop Val</span></div>`;
+            const rows = items.map(it => {
+                const c = it.color;
+                const val = formatCurrency(vals[it.label] || 0);
+                const pct = totalVal > 0 ? Math.round((vals[it.label] || 0) / totalVal * 100) : '0';
+                return `<div class="leg-item" data-key="${it.label}"><span class="leg-dot" style="background:rgb(${c.join(',')})"></span><span style="flex:1">${it.label}</span><span style="color:#777;font-size:10px;width:32px;text-align:right">${pct}%</span><span style="color:#999;font-size:10px;width:52px;text-align:right">${val}</span></div>`;
+            }).join('');
+            return header + rows;
+        }
+
+        // Always show Unknown / Other rows
+        const hasUnknownYear = parcels.some(p => p.eraLabel === 'Unknown');
+        const hasOtherClass  = parcels.some(p => p.classLabel === OTHER_GROUP.label);
+
+        function renderLegend(elId, mode, subset) {
+            const counts = {};
+            const vals = {};
+            let totalVal = 0;
+            subset.forEach(p => {
+                const label = mode === 'year' ? p.eraLabel : p.classLabel;
+                counts[label] = (counts[label] || 0) + 1;
+                vals[label] = (vals[label] || 0) + (p.assesstot || 0);
+                totalVal += (p.assesstot || 0);
+            });
+
+            let items;
+            if (mode === 'year') {
+                items = ERAS.map(e => ({ label: e.label, color: e.color }));
+                if (hasUnknownYear) items.push({ label: 'Unknown', color: UNKNOWN_COLOR });
+            } else {
+                items = BLDG_GROUPS.map(g => ({ label: g.label, color: g.color }));
+                if (hasOtherClass) items.push({ label: OTHER_GROUP.label, color: OTHER_GROUP.color });
+            }
+
+            document.getElementById(elId).innerHTML = buildLegendHTML(items, counts, vals, totalVal);
+        }
+
+        renderLegend('legend-year', 'year', parcels);
+        renderLegend('legend-class', 'class', parcels);
+
+        // ---------------------------------------------------------------
+        // Shared cross-filter state
+        // ---------------------------------------------------------------
+        const filtersYear  = new Set();
+        const filtersClass = new Set();
+
+        function getFilteredParcels() {
+            let result = parcels;
+            if (filtersYear.size > 0) {
+                result = result.filter(p => filtersYear.has(p.eraLabel));
+            }
+            if (filtersClass.size > 0) {
+                result = result.filter(p => filtersClass.has(p.classLabel));
+            }
+            return result;
+        }
+
+        function makeLayers(mode) {
+            const colorFn = mode === 'year' ? p => p.eraColor : p => p.classColor;
+            const filtered = getFilteredParcels();
+
+            return [
+                new deck.GeoJsonLayer({
+                    id: 'boundary-' + mode,
+                    data: gowanusBoundary,
+                    stroked: true, filled: true,
+                    getFillColor: [255, 255, 255, 8],
+                    getLineColor: [255, 0, 0, 200],
+                    getLineWidth: 3,
+                    lineWidthUnits: 'pixels',
+                    pickable: false,
+                }),
+                new deck.ColumnLayer({
+                    id: 'columns-' + mode,
+                    data: filtered,
+                    getPosition: d => [d.lon, d.lat],
+                    getElevation: d => Math.max(d.assesstot * heightScale, 5),
+                    getFillColor: d => [...colorFn(d), 200],
+                    radius: 12,
+                    diskResolution: 6,
+                    extruded: true,
+                    pickable: true,
+                    elevationScale: 1,
+                    material: { ambient: 0.4, diffuse: 0.6, shininess: 40, specularColor: [60, 60, 60] },
+                }),
+            ];
+        }
+
+        // ---------------------------------------------------------------
+        // Create two maps
+        // ---------------------------------------------------------------
+        const mapOpts = {
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            center: [INITIAL_VIEW.longitude, INITIAL_VIEW.latitude],
+            zoom: INITIAL_VIEW.zoom,
+            pitch: INITIAL_VIEW.pitch,
+            bearing: INITIAL_VIEW.bearing,
+            antialias: true,
+        };
+
+        const mapLeft  = new maplibregl.Map({ container: 'map-left',  ...mapOpts });
+        const mapRight = new maplibregl.Map({ container: 'map-right', ...mapOpts });
+
+        const overlayLeft  = new deck.MapboxOverlay({ layers: makeLayers('year') });
+        const overlayRight = new deck.MapboxOverlay({ layers: makeLayers('class') });
+
+        mapLeft.addControl(new maplibregl.NavigationControl(), 'bottom-left');
+        mapLeft.addControl(overlayLeft);
+        mapRight.addControl(overlayRight);
+
+        // ---------------------------------------------------------------
+        // Sync cameras
+        // ---------------------------------------------------------------
+        let syncing = false;
+
+        function syncMap(source, target) {
+            if (syncing) return;
+            syncing = true;
+            target.jumpTo({
+                center: source.getCenter(),
+                zoom: source.getZoom(),
+                pitch: source.getPitch(),
+                bearing: source.getBearing(),
+            });
+            syncing = false;
+        }
+
+        mapLeft.on('move',  () => syncMap(mapLeft, mapRight));
+        mapRight.on('move', () => syncMap(mapRight, mapLeft));
+
+        // ---------------------------------------------------------------
+        // Update both maps and legend highlights
+        // ---------------------------------------------------------------
+        function updateBothMaps() {
+            overlayLeft.setProps({ layers: makeLayers('year') });
+            overlayRight.setProps({ layers: makeLayers('class') });
+
+            // Re-render legend counts using the cross-filter from the OTHER side
+            // Year legend counts reflect parcels filtered by class selection
+            const yearSubset = filtersClass.size > 0
+                ? parcels.filter(p => filtersClass.has(p.classLabel))
+                : parcels;
+            renderLegend('legend-year', 'year', yearSubset);
+
+            // Class legend counts reflect parcels filtered by year selection
+            const classSubset = filtersYear.size > 0
+                ? parcels.filter(p => filtersYear.has(p.eraLabel))
+                : parcels;
+            renderLegend('legend-class', 'class', classSubset);
+
+            // Re-apply highlights after re-render
+            const yearEl = document.getElementById('legend-year');
+            const hasYearFilter = filtersYear.size > 0;
+            yearEl.querySelectorAll('.leg-item').forEach(el => {
+                const k = el.getAttribute('data-key');
+                el.classList.toggle('active', filtersYear.has(k));
+                el.classList.toggle('dimmed', hasYearFilter && !filtersYear.has(k));
+            });
+
+            const classEl = document.getElementById('legend-class');
+            const hasClassFilter = filtersClass.size > 0;
+            classEl.querySelectorAll('.leg-item').forEach(el => {
+                const k = el.getAttribute('data-key');
+                el.classList.toggle('active', filtersClass.has(k));
+                el.classList.toggle('dimmed', hasClassFilter && !filtersClass.has(k));
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // Legend click handlers
+        // ---------------------------------------------------------------
+        document.getElementById('legend-year').addEventListener('click', (e) => {
+            const item = e.target.closest('.leg-item');
+            if (!item) return;
+            const key = item.getAttribute('data-key');
+            if (filtersYear.has(key)) filtersYear.delete(key); else filtersYear.add(key);
+            updateBothMaps();
+        });
+
+        document.getElementById('legend-class').addEventListener('click', (e) => {
+            const item = e.target.closest('.leg-item');
+            if (!item) return;
+            const key = item.getAttribute('data-key');
+            if (filtersClass.has(key)) filtersClass.delete(key); else filtersClass.add(key);
+            updateBothMaps();
+        });
+
+        // ---------------------------------------------------------------
+        // Tooltip (shared, works on both maps)
+        // ---------------------------------------------------------------
+        const tooltip = document.getElementById('tooltip');
+
+        function setupTooltip(mapEl, overlay, mode) {
+            const canvas = mapEl.getCanvas();
+            canvas.addEventListener('mousemove', (event) => {
+                const info = overlay.pickObject({ x: event.offsetX, y: event.offsetY });
+                if (info && info.object) {
+                    const d = info.object;
+                    const rect = canvas.getBoundingClientRect();
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (rect.left + event.offsetX + 12) + 'px';
+                    tooltip.style.top = (rect.top + event.offsetY + 12) + 'px';
+                    const yr = d.yearbuilt > 0 ? d.yearbuilt : 'Unknown';
+                    const fl = d.numfloors > 0 ? d.numfloors : '\u2014';
+                    const cls = BLDG_CLASS[d.bldgclass] || d.bldgclass || '\u2014';
+                    const color = mode === 'year' ? d.eraColor : d.classColor;
+                    const highlight = mode === 'year' ? `Built ${yr}` : d.classLabel;
+                    tooltip.innerHTML = `
+                        <div class="tt-addr">${d.address || 'No address'}</div>
+                        <div class="tt-highlight" style="color:rgb(${color.join(',')})">${highlight}</div>
+                        <div class="tt-val">Assessed: ${formatCurrency(d.assesstot)}</div>
+                        <div class="tt-detail">${cls} \u00B7 Year: ${yr} \u00B7 Floors: ${fl}</div>
+                    `;
+                    canvas.style.cursor = 'pointer';
+                } else {
+                    tooltip.style.display = 'none';
+                    canvas.style.cursor = '';
+                }
+            });
+            canvas.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+                canvas.style.cursor = '';
+            });
+        }
+
+        setupTooltip(mapLeft,  overlayLeft,  'year');
+        setupTooltip(mapRight, overlayRight, 'class');
+    }
+    </script>
+</body>
+</html>

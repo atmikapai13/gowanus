@@ -3,11 +3,28 @@ Script to generate Brooklyn BIDs HTML table and NYC BID Overview from NYC Open D
 This pulls the Year_Found column and full BID names directly from the source data.
 """
 
+import json
 import pandas as pd
 import re
 
+# Load DOF assessed values from PLUTO parcel data
+print("Loading DOF assessed values from PLUTO parcel data...")
+with open("DATA/gowanus_parcels.json") as f:
+    parcel_data = json.load(f)
+
+dof_totals = {}
+dof_lot_counts = {}
+for p in parcel_data["parcels"]:
+    name = p["bid_name"]
+    dof_totals[name] = dof_totals.get(name, 0) + p["assesstot"]
+    dof_lot_counts[name] = dof_lot_counts.get(name, 0) + 1
+
+print(f"  DOF data for {len(dof_totals)} BIDs:")
+for name, total in sorted(dof_totals.items(), key=lambda x: -x[1]):
+    print(f"    {name}: ${total:,.0f} ({dof_lot_counts[name]} lots)")
+
 # Fetch NYC BIDs data from open data API
-print("Downloading NYC BIDs data...")
+print("\nDownloading NYC BIDs data...")
 bids_url = "https://data.cityofnewyork.us/api/views/7jdm-inj8/rows.csv?accessType=DOWNLOAD"
 bids_data = pd.read_csv(bids_url)
 
@@ -63,6 +80,19 @@ def format_currency(val):
     else:
         return f'${val:.0f}'
 
+def format_currency_large(val):
+    """Format currency values for larger amounts (billions)"""
+    if pd.isna(val) or val == 0:
+        return '—'
+    if val >= 1e9:
+        return f'${val/1e9:.1f}B'
+    if val >= 1e6:
+        return f'${val/1e6:.0f}M'
+    elif val >= 1000:
+        return f'${val/1000:.0f}K'
+    else:
+        return f'${val:.0f}'
+
 def generate_table_row(row, color, sequential_num, indent=False):
     """Generate an HTML table row for a BID
 
@@ -79,6 +109,8 @@ def generate_table_row(row, color, sequential_num, indent=False):
     assessment = format_currency(row['Assessment'])
     budget = format_currency(row['Budget'])
     year = int(row['Year']) if pd.notna(row['Year']) else '—'
+    dof_val = dof_totals.get(bid_name, 0)
+    dof_assessed = format_currency_large(dof_val) if dof_val > 0 else '—'
 
     return f"""{prefix}<tr>
 {prefix}    <td style="text-align: center; padding: 4px 3px;"><span style="color: {color}; font-size: 14px;">■</span> {sequential_num}</td>
@@ -87,6 +119,7 @@ def generate_table_row(row, color, sequential_num, indent=False):
 {prefix}    <td style="text-align: right; padding: 4px 3px;">{properties}</td>
 {prefix}    <td style="text-align: right; padding: 4px 3px;">{assessment}</td>
 {prefix}    <td style="text-align: right; padding: 4px 3px;">{budget}</td>
+{prefix}    <td style="text-align: right; padding: 4px 3px;">{dof_assessed}</td>
 {prefix}</tr>
 """
 
@@ -132,14 +165,18 @@ table_html = """    <p style="margin: 0 0 8px 0; font-size: 9px; color: #666;"><
             <th style="text-align: right; padding: 5px 3px;">Properties ▼</th>
             <th style="text-align: right; padding: 5px 3px;">Assessment</th>
             <th style="text-align: right; padding: 5px 3px;">Budget</th>
+            <th style="text-align: right; padding: 5px 3px;">DOF Assessed*</th>
         </tr>
 
 """
 
 table_html += "\n".join(main_table_rows)
 
-# Add Gowanus BID (Proposed) row
-table_html += """
+# Add Gowanus BID (Proposed) row with DOF data
+gowanus_dof = dof_totals.get("Gowanus BID (Proposed)", 0)
+gowanus_dof_fmt = format_currency_large(gowanus_dof) if gowanus_dof > 0 else '—'
+gowanus_lots = dof_lot_counts.get("Gowanus BID (Proposed)", 0)
+table_html += f"""
         <tr style="background-color: #d4edda; border-top: 1px solid #28a745;">
             <td style="text-align: center; padding: 4px 3px;"><span style="color: #1e7e34; font-size: 14px; border: 2px solid #cc0000;">■</span></td>
             <td style="padding: 4px 3px; font-weight: bold; color: #1e7e34;">Gowanus BID (Proposed)</td>
@@ -147,6 +184,7 @@ table_html += """
             <td style="text-align: right; padding: 4px 3px;">—</td>
             <td style="text-align: right; padding: 4px 3px;">—</td>
             <td style="text-align: right; padding: 4px 3px;">—</td>
+            <td style="text-align: right; padding: 4px 3px;">{gowanus_dof_fmt}</td>
         </tr>
     </table>
 """
@@ -245,7 +283,7 @@ for i, borough in enumerate(borough_order):
 """)
 
 # Generate the borough overview table HTML
-overview_html = f"""    <h3 style="margin: 0 0 10px 0;">NYC BIDs by Borough (Ex. Proposed Gowanus BID)</h3>
+overview_html = f"""    <h3 style="margin: 0 0 10px 0;">NYC BIDs by Borough</h3>
     <table style="border-collapse: collapse; font-size: 11px; width: 100%;">
         <tr style="border-bottom: 2px solid #333; background-color: #f5f5f5;">
             <th style="text-align: left; padding: 6px 4px;"></th>
