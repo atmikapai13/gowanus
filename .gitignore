@@ -1,14 +1,31 @@
-# Large GIS data files (too big for GitHub)
+# Large GIS data files
 gowanus_bid_gis/
 1_BID_data/DATA/*.geojson
 1_BID_data/DATA/tracts.json
 
-# Keep the HTML snippet files but ignore data
+# Shapefiles and GIS binary formats
 *.shp
 *.shx
 *.dbf
 *.prj
 *.cpg
+*.sbn
+*.sbx
+*.shp.xml
+
+# Binary data files
+*.zip
+*.xlsx
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Jupyter notebooks
+*.ipynb
+
+# Generated HTML snippets
+*_snippet.html
 
 # OS files
 .DS_Store
