@@ -82,6 +82,33 @@
             flex-shrink: 0;
         }
         .legend-panel .source { font-size: 9px; color: #666; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px; }
+        .gallery-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            font-size: 11px;
+            color: #aaa;
+            transition: background 0.15s;
+            border: 1px solid rgba(255,255,255,0.08);
+            user-select: none;
+        }
+        .gallery-toggle:hover { background: rgba(255,255,255,0.08); }
+        .gallery-toggle.active { background: rgba(255,200,50,0.12); border-color: rgba(255,200,50,0.4); color: #ffd666; }
+        .gallery-toggle .toggle-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,200,50,0.6);
+            background: transparent;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+        .gallery-toggle.active .toggle-dot { background: rgba(255,200,50,0.9); }
 
         /* Back link */
         #back-link {
@@ -130,9 +157,10 @@
         <div id="map-left" class="map-container"></div>
         <div class="legend-panel">
             <h3>Year Built</h3>
-            <div class="legend-subtitle">Column height = property value</div>
+            <div class="legend-subtitle">Column height = assessed value per sq ft</div>
             <div class="legend-list" id="legend-year"></div>
-            <div class="source">Source: NYC PLUTO via NYC Open Data</div>
+            <div class="gallery-toggle" id="gallery-toggle-left"><span class="toggle-dot"></span>Artist Studios &amp; Galleries</div>
+            <div class="source">Source: NYC PLUTO via NYC Open Data<br>Gallery data: Gowanus Open Studios 2024</div>
         </div>
     </div>
 
@@ -140,8 +168,9 @@
         <div id="map-right" class="map-container"></div>
         <div class="legend-panel">
             <h3>Building Classification</h3>
-            <div class="legend-subtitle">Column height = property value</div>
+            <div class="legend-subtitle">Column height = assessed value per sq ft</div>
             <div class="legend-list" id="legend-class"></div>
+            <div class="gallery-toggle" id="gallery-toggle-right"><span class="toggle-dot"></span>Artist Studios &amp; Galleries</div>
             <div class="source">"Other" includes hotels, religious,<br>educational, government &amp; utilities<br><br>Visualization: deck.gl + MapLibre GL</div>
         </div>
     </div>
@@ -252,6 +281,51 @@
         return g ? g.color : OTHER_GROUP.color;
     }
 
+    // ----- Artist / Gallery locations (matched from Gowanus Open Studios 2024 PDF) -----
+    const GALLERY_INFO = {
+        "3003890039.00000000": { addr: "72A 4th Ave", names: ["Douglas Wirls", "Iona Fromboluti"] },
+        "3003890054.00000000": { addr: "37 Saint Marks Pl", names: ["Why Not Art Showcase", "Michael James Freedman", "Sylvie Florence Freedman"] },
+        "3003950016.00000000": { addr: "30 Saint Marks Pl", names: ["Laziza Rakhimova"] },
+        "3004050008.00000000": { addr: "211 Bond St", names: ["Faux Brushes"] },
+        "3004050021.00000000": { addr: "472 Baltic St", names: ["Rene Murray"] },
+        "3004120050.00000000": { addr: "251 Douglass St", names: ["Arts Gowanus Mural"] },
+        "3004130033.00000000": { addr: "337-345 Butler St", names: ["Other Art Fair", "Chris Weller", "Erica Morales"] },
+        "3004200031.00000000": { addr: "333 Douglass St", names: ["Threes Brewing", "Adam Suerte", "Bill Roundy", "Kate Brennan", "Preetha Anne Stephen", "Rich Garr"] },
+        "3004200034.00000000": { addr: "339 Douglass St", names: ["Carlo Altomare", "Steve Hicks"] },
+        "3004200042.00000000": { addr: "182 4th Ave", names: ["Dancewave", "Catalina Cavelight"] },
+        "3004200045.00000000": { addr: "621 Degraw St", names: ["Fifth Avenue Committee"], more: 7 },
+        "3004200054.00000000": { addr: "609 Degraw St", names: ["Mirror Tea & Sake House", "Angelica Bergamini", "Nneka Bennett NKA Workshop", "Paula Walters Parker"] },
+        "3004260001.00000000": { addr: "545 Sackett St", names: ["Arts Gowanus Mural"] },
+        "3004260041.00000000": { addr: "573 Sackett St", names: ["The Ritual Division"] },
+        "3004270052.00000000": { addr: "623 Sackett St", names: ["Wild East Brewing Co.", "Jocelyn Benford"] },
+        "3004310001.00000000": { addr: "304 Bond St", names: ["St. Lydia\u2019s"] },
+        "3004310002.00000000": { addr: "303 Bond St", names: ["Van Alen Institute"] },
+        "3004310005.00000000": { addr: "298 Bond St", names: ["Fringe Salon", "Ray Lagstein"] },
+        "3004320025.00000000": { addr: "280 Nevins St", names: ["Open House BK Arts", "Amanda Kavanagh", "Anne Twitty", "Catherine Orrok"], more: 15 },
+        "3004327501.00000000": { addr: "543 Union St", names: ["Claireware Pottery", "David Cunningham", "Domenica Bucalo", "Elizabeth O\u2019Reilly"], more: 12 },
+        "3004330001.00000000": { addr: "300 Nevins St", names: ["Arts Gowanus Mural"] },
+        "3004330028.00000000": { addr: "585 Union St", names: ["Arts Gowanus Murals"] },
+        "3004330047.00000000": { addr: "575 Union St", names: ["Arts Gowanus Murals"] },
+        "3004330053.00000000": { addr: "567 Union St", names: ["From Here to Sunday", "In My Pockets", "Ana Krent"] },
+        "3004340016.00000000": { addr: "620 Union St", names: ["Sara June BK", "Maria Dusamp"] },
+        "3004400039.00000000": { addr: "270 3rd Ave", names: ["Canal Bar", "Annie Grossinger", "Rob Hon"] },
+        "3004410005.00000000": { addr: "257 3rd Ave", names: ["Gowanus Wine Studio", "Jenny Belin"] },
+        "3004410053.00000000": { addr: "540 President St", names: ["Brooklyn Neighborhood Arts", "Arts Gowanus Office", "Willie Mae Rock Camp"], more: 45 },
+        "3004470036.00000000": { addr: "286 3rd Ave", names: ["Alzano"] },
+        "3004480032.00000000": { addr: "574 President St", names: ["Strong Rope Brewery", "Bonnie Steinsnyder", "Monica Jane Rich"] },
+        "3004480045.00000000": { addr: "531 Carroll St", names: ["Joann Amitrano & Friends"] },
+        "3004480054.00000000": { addr: "515 Carroll St", names: ["Morgan Smith", "Dante Mann"] },
+        "3004530041.00000000": { addr: "494 Carroll St", names: ["Jonosuke Tanaka", "Kiichiro Adachi", "Motoko Otsuki"] },
+        "3004540001.00000000": { addr: "317 3rd Ave", names: ["Dirty Precious"] },
+        "3004540016.00000000": { addr: "474 Carroll St", names: ["Lisa Dombrow"] },
+        "3004540021.00000000": { addr: "505 Carroll St", names: ["Textile Arts Center", "Frank Parisi", "Axelle Destaing"] },
+        "3004580001.00000000": { addr: "374 Bond St", names: ["Jessica Weiss"] },
+        "3004650012.00000000": { addr: "69 3rd St", names: ["Speed Paste Robot AKA Steven Solomon"] },
+        "3004710125.00000000": { addr: "98 4th St", names: ["4th Avenue Yarn Collective"] },
+        "3009677501.00000000": { addr: "322 3rd Ave", names: ["Powerhouse Arts", "Hi Bye"] },
+    };
+    const GALLERY_BBLS = new Set(Object.keys(GALLERY_INFO));
+
     // ----- Init -----
     const INITIAL_VIEW = { latitude: 40.6790, longitude: -73.9905, zoom: 15, pitch: 50, bearing: -20 };
 
@@ -263,7 +337,7 @@
     function init(data) {
         const allParcels = data.parcels || [];
         const bidGeoJson = data.bid_boundaries || { type: 'FeatureCollection', features: [] };
-        const parcels = allParcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)');
+        const parcels = allParcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)' && p.lotarea > 0);
 
         // Pre-compute
         parcels.forEach(p => {
@@ -271,23 +345,34 @@
             p.eraColor  = getEraColor(p.yearbuilt);
             p.classLabel = getBldgGroupLabel(p.bldgclass);
             p.classColor = getBldgGroupColor(p.bldgclass);
+            p.isGallery = GALLERY_BBLS.has(p.bbl);
+            p.assessPerSqFt = (p.assesstot || 0) / p.lotarea;
         });
+
+        const galleryCount = parcels.filter(p => p.isGallery).length;
+        console.log('Gallery parcels matched:', galleryCount);
 
         const gowanusBoundary = {
             type: 'FeatureCollection',
             features: bidGeoJson.features.filter(f => f.properties.name === 'Gowanus BID (Proposed)'),
         };
 
-        // Height scale
-        const values = parcels.map(p => p.assesstot).filter(v => v > 0).sort((a, b) => a - b);
+        // Height scale (normalized to $/sq ft)
+        const values = parcels.map(p => p.assessPerSqFt).filter(v => v > 0).sort((a, b) => a - b);
         const p99 = values[Math.floor(values.length * 0.99)] || 1;
         const heightScale = 800 / p99;
 
-        // Title bar stats
-        const years = parcels.map(p => p.yearbuilt).filter(y => y > 0).sort((a, b) => a - b);
-        const medianYear = years.length > 0 ? years[Math.floor(years.length / 2)] : '—';
-        document.querySelector('#title-bar .subtitle').textContent =
-            `${parcels.length} properties \u00B7 Median year built: ${medianYear}`;
+        // Title bar stats (updated dynamically)
+        function updateTitleStats() {
+            const subset = getFilteredParcels();
+            const display = showGalleries ? subset.filter(p => p.isGallery) : subset;
+            const yrs = display.map(p => p.yearbuilt).filter(y => y > 0).sort((a, b) => a - b);
+            const median = yrs.length > 0 ? yrs[Math.floor(yrs.length / 2)] : '\u2014';
+            const label = showGalleries ? 'artist/gallery properties' : 'properties';
+            document.querySelector('#title-bar .subtitle').textContent =
+                `${display.length} ${label} \u00B7 Median year built: ${median}`;
+        }
+        updateTitleStats();
 
         // ---------------------------------------------------------------
         // Build legends
@@ -338,6 +423,7 @@
         // ---------------------------------------------------------------
         const filtersYear  = new Set();
         const filtersClass = new Set();
+        let showGalleries = false;
 
         function getFilteredParcels() {
             let result = parcels;
@@ -354,7 +440,7 @@
             const colorFn = mode === 'year' ? p => p.eraColor : p => p.classColor;
             const filtered = getFilteredParcels();
 
-            return [
+            const layers = [
                 new deck.GeoJsonLayer({
                     id: 'boundary-' + mode,
                     data: gowanusBoundary,
@@ -369,8 +455,12 @@
                     id: 'columns-' + mode,
                     data: filtered,
                     getPosition: d => [d.lon, d.lat],
-                    getElevation: d => Math.max(d.assesstot * heightScale, 5),
-                    getFillColor: d => [...colorFn(d), 200],
+                    getElevation: d => Math.max(d.assessPerSqFt * heightScale, 5),
+                    getFillColor: d => {
+                        if (showGalleries && d.isGallery) return [255, 210, 50, 230];
+                        if (showGalleries && !d.isGallery) return [...colorFn(d), 80];
+                        return [...colorFn(d), 200];
+                    },
                     radius: 12,
                     diskResolution: 6,
                     extruded: true,
@@ -379,6 +469,28 @@
                     material: { ambient: 0.4, diffuse: 0.6, shininess: 40, specularColor: [60, 60, 60] },
                 }),
             ];
+
+            // Gallery highlight rings
+            if (showGalleries) {
+                const galleryParcels = filtered.filter(p => p.isGallery);
+                layers.push(new deck.ColumnLayer({
+                    id: 'gallery-rings-' + mode,
+                    data: galleryParcels,
+                    getPosition: d => [d.lon, d.lat],
+                    getElevation: d => Math.max(d.assessPerSqFt * heightScale, 5) + 2,
+                    getFillColor: [255, 210, 50, 0],
+                    getLineColor: [255, 210, 50, 255],
+                    radius: 18,
+                    diskResolution: 12,
+                    extruded: true,
+                    pickable: false,
+                    elevationScale: 1,
+                    wireframe: true,
+                    material: { ambient: 0.8, diffuse: 0.5, shininess: 60, specularColor: [255, 220, 100] },
+                }));
+            }
+
+            return layers;
         }
 
         // ---------------------------------------------------------------
@@ -429,18 +541,22 @@
         function updateBothMaps() {
             overlayLeft.setProps({ layers: makeLayers('year') });
             overlayRight.setProps({ layers: makeLayers('class') });
+            updateTitleStats();
 
             // Re-render legend counts using the cross-filter from the OTHER side
+            // When gallery toggle is active, scope counts to gallery parcels only
+            const base = showGalleries ? parcels.filter(p => p.isGallery) : parcels;
+
             // Year legend counts reflect parcels filtered by class selection
             const yearSubset = filtersClass.size > 0
-                ? parcels.filter(p => filtersClass.has(p.classLabel))
-                : parcels;
+                ? base.filter(p => filtersClass.has(p.classLabel))
+                : base;
             renderLegend('legend-year', 'year', yearSubset);
 
             // Class legend counts reflect parcels filtered by year selection
             const classSubset = filtersYear.size > 0
-                ? parcels.filter(p => filtersYear.has(p.eraLabel))
-                : parcels;
+                ? base.filter(p => filtersYear.has(p.eraLabel))
+                : base;
             renderLegend('legend-class', 'class', classSubset);
 
             // Re-apply highlights after re-render
@@ -481,6 +597,18 @@
         });
 
         // ---------------------------------------------------------------
+        // Gallery toggle handlers
+        // ---------------------------------------------------------------
+        function toggleGalleries() {
+            showGalleries = !showGalleries;
+            document.getElementById('gallery-toggle-left').classList.toggle('active', showGalleries);
+            document.getElementById('gallery-toggle-right').classList.toggle('active', showGalleries);
+            updateBothMaps();
+        }
+        document.getElementById('gallery-toggle-left').addEventListener('click', toggleGalleries);
+        document.getElementById('gallery-toggle-right').addEventListener('click', toggleGalleries);
+
+        // ---------------------------------------------------------------
         // Tooltip (shared, works on both maps)
         // ---------------------------------------------------------------
         const tooltip = document.getElementById('tooltip');
@@ -500,11 +628,24 @@
                     const cls = BLDG_CLASS[d.bldgclass] || d.bldgclass || '\u2014';
                     const color = mode === 'year' ? d.eraColor : d.classColor;
                     const highlight = mode === 'year' ? `Built ${yr}` : d.classLabel;
+                    let galleryHTML = '';
+                    if (d.isGallery) {
+                        const info = GALLERY_INFO[d.bbl];
+                        if (info) {
+                            const nameList = info.names.slice(0, 4).join(', ');
+                            const moreCount = (info.more || 0) + Math.max(0, info.names.length - 4);
+                            const moreTag = moreCount > 0 ? ` +${moreCount} more` : '';
+                            galleryHTML = `<div style="color:#ffd232;font-size:11px;font-weight:600;margin-top:4px;border-top:1px solid rgba(255,200,50,0.2);padding-top:4px">\u2605 Artist Studio / Gallery</div><div style="color:#ddc;font-size:11px">${nameList}${moreTag}</div>`;
+                        } else {
+                            galleryHTML = '<div style="color:#ffd232;font-size:11px;font-weight:600;margin-top:2px">\u2605 Artist Studio / Gallery</div>';
+                        }
+                    }
                     tooltip.innerHTML = `
                         <div class="tt-addr">${d.address || 'No address'}</div>
                         <div class="tt-highlight" style="color:rgb(${color.join(',')})">${highlight}</div>
-                        <div class="tt-val">Assessed: ${formatCurrency(d.assesstot)}</div>
+                        <div class="tt-val">$${d.assessPerSqFt.toFixed(0)}/sq ft \u00B7 Total: ${formatCurrency(d.assesstot)}</div>
                         <div class="tt-detail">${cls} \u00B7 Year: ${yr} \u00B7 Floors: ${fl}</div>
+                        ${galleryHTML}
                     `;
                     canvas.style.cursor = 'pointer';
                 } else {
