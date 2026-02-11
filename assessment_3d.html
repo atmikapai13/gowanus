@@ -128,7 +128,7 @@
                 <div class="stat-value" id="stat-assessed">—</div>
             </div>
         </div>
-        <div class="legend-title" style="margin-bottom: 10px;">Column height = DOF assessed value</div>
+        <div class="legend-title" style="margin-bottom: 10px;">Column height = assessed value per sq ft ($/sq ft)</div>
         <div class="legend-title">BID Color = median assessed value per lot</div>
         <div id="color-scale" style="display:flex;gap:0;margin-bottom:8px;border-radius:3px;overflow:hidden;height:10px;">
             <div style="flex:1;background:rgb(58,110,128)" title="Low"></div>
@@ -264,12 +264,20 @@
         });
 
     function init(data) {
-        const parcels = data.parcels || [];
+        const allParcels = data.parcels || [];
         const bidGeoJson = data.bid_boundaries || { type: 'FeatureCollection', features: [] };
-        console.log('Loaded parcels:', parcels.length, 'Gowanus:', parcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)').length);
 
-        // --- Compute height scale cap (99th percentile) ---
-        const values = parcels.map(p => p.assesstot).filter(v => v > 0).sort((a, b) => a - b);
+        // Filter out parcels with no lot area (can't compute $/sq ft)
+        const parcels = allParcels.filter(p => p.lotarea > 0);
+        console.log('Loaded parcels:', allParcels.length, 'After lotarea filter:', parcels.length, 'Gowanus:', parcels.filter(p => p.bid_name === 'Gowanus BID (Proposed)').length);
+
+        // Compute assessed value per sq ft for each parcel
+        parcels.forEach(p => {
+            p.assessPerSqFt = (p.assesstot || 0) / p.lotarea;
+        });
+
+        // --- Compute height scale cap (99th percentile of $/sq ft) ---
+        const values = parcels.map(p => p.assessPerSqFt).filter(v => v > 0).sort((a, b) => a - b);
         const p99 = values[Math.floor(values.length * 0.99)] || 1;
         const maxVal = p99; // cap at 99th percentile to avoid extreme outliers
 
@@ -397,7 +405,7 @@
                 id: 'columns',
                 data: filteredParcels,
                 getPosition: d => [d.lon, d.lat],
-                getElevation: d => Math.max(d.assesstot * heightScale, 5),
+                getElevation: d => Math.max(d.assessPerSqFt * heightScale, 5),
                 getFillColor: d => [...(d.color || [128, 128, 128]), 200],
                 radius: 12,
                 diskResolution: 6,
@@ -533,9 +541,11 @@
                 const yr = d.yearbuilt > 0 ? d.yearbuilt : '—';
                 const fl = d.numfloors > 0 ? d.numfloors : '—';
                 const cls = BLDG_CLASS[d.bldgclass] || d.bldgclass || '—';
+                const perSqFt = d.assessPerSqFt ? '$' + d.assessPerSqFt.toFixed(0) + '/sq ft' : '—';
                 tooltip.innerHTML = `
                     <div class="tt-addr">${d.address || 'No address'}</div>
-                    <div class="tt-val">${formatCurrency(d.assesstot)}</div>
+                    <div class="tt-val">${perSqFt}</div>
+                    <div class="tt-detail" style="margin-bottom:2px">Total assessed: ${formatCurrency(d.assesstot)} &middot; Lot: ${d.lotarea.toLocaleString()} sq ft</div>
                     <div class="tt-bid">${d.bid_name}</div>
                     <div class="tt-detail">${cls} &middot; Year: ${yr} &middot; Floors: ${fl}</div>
                 `;
